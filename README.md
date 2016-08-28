@@ -2,6 +2,10 @@
 
 String ID (SID) is a tool that converts character strings into fix-sized hashed values, commonly used in games for looking up resources. Also, SIDs can be used in switch cases, which is not possible for strings.
 
+For more explanations, check out these articles:
+[Preprocessed Strings for Asset IDs](http://www.randygaul.net/2015/12/11/preprocessed-strings-for-asset-ids/) by Randy Gaul
+[Static Hash Values](http://bitsquid.blogspot.com/2010/10/static-hash-values.html) by Niklas
+
 This repository contains several projects:  
   * sid: Core library (single header file).
   * siddb: Lightweight database to keep track of SID hashes for debug purposes (not implemented yet).
