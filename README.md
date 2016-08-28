@@ -25,6 +25,7 @@ To build the projects, you need:
 /*
   The SID macro evaluates to a StringId object at compile-time.
   The SID_VAL macro evaluates to a StringId's underlying raw integer data at compile-time.
+  StringId::GerValue() returns a StringId's underlying raw integer data.
   There is no implicit conversion between StringId and the underlying raw integer type.
 */
 
