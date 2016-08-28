@@ -8,7 +8,7 @@ Notable advantages of SIDs over strings:
   * Looking up hash tables using SID keys is typically more efficient than using strings.
   * SIDs can be used in switch cases, which is not possible for strings.
 
-Main disadvantage:
+Main disadvantage and solutions:
   * SIDs can be hard to debug, as they are just hashed integers, so it is preferrable to keep a database of string-SID pairs for two-way lookups, as well as a debugger plug-in to translate SIDs into corresponding strings in the watch window.
  
 For more explanations, check out these articles:
@@ -20,7 +20,7 @@ For more explanations, check out these articles:
 This repository contains several projects:  
   * sid: Core library (single header file).
   * siddb: Lightweight database to keep track of SID hashes for debug purposes (not implemented yet).
-  * sidvsdebu: Autoexp addin for Visual Studio debugging.
+  * sidvsdebu: Autoexp addin for Visual Studio debugging (not implemented yet).
   * unit-test: Library unit tests.
 
 To build the projects, you need:  
