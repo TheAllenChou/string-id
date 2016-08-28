@@ -1,7 +1,16 @@
 ## String ID
 
-String ID (SID) is a tool that converts character strings into fix-sized hashed values, commonly used in games for looking up resources. Also, SIDs can be used in switch cases, which is not possible for strings.
+String ID (SID) is a tool that converts character strings into fix-sized hashed values, commonly used in games for looking up resources.
 
+Notable advantages of SIDs over strings:
+  * Each SID takes up small constant amount of memory (the underlying integer type).
+  * SID comparison is constant-time and typically more efficient than string comparison.
+  * Looking up hash tables using SID keys is typically more efficient than using strings.
+  * SIDs can be used in switch cases, which is not possible for strings.
+
+Main disadvantage:
+  * SIDs can be hard to debug, as they are just hashed integers, so it is preferrable to keep a database of string-SID pairs for two-way lookups, as well as a debugger plug-in to translate SIDs into corresponding strings in the watch window.
+ 
 For more explanations, check out these articles:
   * [Preprocessed Strings for Asset IDs](http://www.randygaul.net/2015/12/11/preprocessed-strings-for-asset-ids/) by Randy Gaul
   * [Practical Hash IDs](http://cowboyprogramming.com/2007/01/04/practical-hash-ids/) by Mick West
@@ -41,7 +50,6 @@ ASSERT(sid0 == sid3);
 
 // switch cases
 const StringId sid4 = SID("print");
-
 switch (sid4.GetValue())
 {
   case SID_VAL("print"):
@@ -52,6 +60,9 @@ switch (sid4.GetValue())
     drawStuff();
     break;
 }
+
+// asset look-up
+Texture* pTexture = g_textureMgr.FindTexture(SID("cloud"));
 ```
 
 ----
