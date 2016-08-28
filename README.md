@@ -22,6 +22,12 @@ To build the projects, you need:
 
 ## Code Examples
 ```C++
+/*
+  The SID macro evaluates to a StringId object at compile-time.
+  The SID_VAL macro evaluates to a StringId's underlying raw integer data at compile-time.
+  There is no implicit conversion between StringId and the underlying raw integer type.
+*/
+
 // comparison
 const StringId sid0 = SID("123");
 const StringId sid1 = SID("abc");
