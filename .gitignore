@@ -1,0 +1,9 @@
+# Build Folders
+bin/
+obj/
+sln/
+Debug/
+DebugDll/
+
+# Sublime Files
+*.sublime-workspace

@@ -1,0 +1,80 @@
+{
+	"folders":
+	[
+		{
+			"path": "bat", 
+      "name": "Batch Files"
+		}, 
+    {
+      "path": "src", 
+      "name": "Source Files"
+    }
+	], 
+  
+  "build_systems": 
+  [
+    {
+      "name": "string-id", 
+      "cmd" : "", 
+      "working_dir": "$project_path\\bat", 
+
+      "variants": 
+      [
+        {
+          "name": "premake", 
+          "cmd" : "premake.bat"
+        }, 
+        {
+          "name": "unmake", 
+          "cmd" : "unmake.bat"
+        }, 
+
+        {
+          "name": "build-debug", 
+          "cmd" : "build-debug.bat"
+        }, 
+        {
+          "name": "build-release", 
+          "cmd" : "build-release.bat"
+        }, 
+        {
+          "name": "build-ship", 
+          "cmd" : "build-ship.bat"
+        }, 
+        
+        {
+          "name": "build-all", 
+          "cmd" : "build-all.bat"
+        }, 
+        {
+          "name": "rebuild-debug", 
+          "cmd" : "rebuild-debug.bat"
+        }, 
+        {
+          "name": "rebuild-release", 
+          "cmd" : "rebuild-release.bat"
+        }, 
+        {
+          "name": "rebuild-ship", 
+          "cmd" : "rebuild-ship.bat"
+        }, 
+        {
+          "name": "clean-all", 
+          "cmd" : "clean-all.bat"
+        }, 
+        {
+          "name": "clean-debug", 
+          "cmd" : "clean-debug.bat"
+        }, 
+        {
+          "name": "clean-release", 
+          "cmd" : "clean-release.bat"
+        }, 
+        {
+          "name": "clean-ship", 
+          "cmd" : "clean-ship.bat"
+        }
+      ]
+    }
+  ]
+}

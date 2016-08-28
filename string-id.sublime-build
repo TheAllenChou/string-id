@@ -1,0 +1,4 @@
+{
+  "path": "/bat"
+  "cmd": ["build-debug"]
+}
