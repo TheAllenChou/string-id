@@ -4,12 +4,14 @@ String ID (SID) is a tool that converts character strings into fix-sized hashed 
 
 For more explanations, check out these articles:
   * [Preprocessed Strings for Asset IDs](http://www.randygaul.net/2015/12/11/preprocessed-strings-for-asset-ids/) by Randy Gaul
+  * [Practical Hash IDs](http://cowboyprogramming.com/2007/01/04/practical-hash-ids/) by Mick West
   * [Hashed Strings](https://blog.molecular-matters.com/2011/06/24/hashed-strings/) by Stefan Reinalter
   * [Static Hash Values](http://bitsquid.blogspot.com/2010/10/static-hash-values.html) by Niklas
 
 This repository contains several projects:  
   * sid: Core library (single header file).
   * siddb: Lightweight database to keep track of SID hashes for debug purposes (not implemented yet).
+  * sidvsdebu: Autoexp addin for Visual Studio debugging.
   * unit-test: Library unit tests.
 
 To build the projects, you need:  
