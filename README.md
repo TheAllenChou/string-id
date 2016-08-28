@@ -14,7 +14,7 @@ To build the projects, you need:
 
 
 ## Code Examples
-```
+```C++
 // comparison
 const StringId sid0 = SID("123");
 const StringId sid1 = SID("abc");
