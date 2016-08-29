@@ -158,6 +158,7 @@ function SetUpProj(projName, projType, locPath, pchFile, fileDir, outDir)
   linkoptions(linkerOptions)
   architecture("x64")
   includedirs(fileDir)
+  links(ReadDependencies(fileDir .. "/dependencies.txt"))
   
   -- recursively scan project directory
   directories = {fileDir}
