@@ -5,5 +5,8 @@ sln/
 Debug/
 DebugDll/
 
+# SID database
+siddb.db
+
 # Sublime Files
 *.sublime-workspace
