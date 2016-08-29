@@ -200,11 +200,11 @@ int main(int argc, const char** argv)
         char str[kMaxStrLen];
         if (FindStringId(sidVal, str))
         {
-          std::printf("0x%016llx -> %s", sidVal, str);
+          std::printf("0x%016llx -> %s\n", sidVal, str);
         }
         else
         {
-          std::printf("0x%016llx -> ???", sidVal);
+          std::printf("0x%016llx -> ???\n", sidVal);
         }
       }
       // dec
