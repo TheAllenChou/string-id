@@ -15,7 +15,6 @@ local winApps =
 local consoleApps =
 {
   "siddb",      -- SID database
-  "sidpp",      -- SID preprocessor
   "unit-test",  -- unit test
 }
 -- Table of projects that use Unicode.  These names should have the
