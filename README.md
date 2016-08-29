@@ -1,6 +1,6 @@
 ## String ID
 
-String ID (SID) is a tool that converts character strings into fix-sized hashed values, commonly used in games for looking up resources.
+String ID (SID) is a tool that converts strings into fix-sized hashed values, commonly used in games for looking up resources.
 
 Notable advantages of SIDs over strings:
   * Each SID takes up small constant amount of memory (the underlying integer type).
