@@ -19,7 +19,7 @@ For more explanations, check out these articles:
 
 This repository contains several projects:  
   * sid: Core library (single header file).
-  * siddb: Lightweight database to keep track of SID hashes for debug purposes (not implemented yet).
+  * siddb: Lightweight database to keep track of SID hashes for debug purposes (WIP).
   * sidvsdebug: Autoexp add-in for Visual Studio debugging (not implemented yet).
   * unit-test: Library unit tests.
 
