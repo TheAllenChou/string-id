@@ -14,7 +14,7 @@ class StringId
 {
   public:
     
-    typedef long long Storage;
+    typedef unsigned long long Storage;
     static_assert(sizeof(Storage) == 8, "StringId requires 64-bit storage");
 
     static const StringId Concat(const StringId &sid, const char *str);
@@ -37,12 +37,12 @@ std::ostream& operator<<(std::ostream &out, StringId sid)
     return out << "sid:" << sid.GetValue();
 }
 
-bool operator==(const StringId& lhs, const StringId &rhs)
+constexpr const bool operator==(const StringId& lhs, const StringId &rhs)
 {
     return lhs.GetValue() == rhs.GetValue();
 }
 
-bool operator!=(const StringId& lhs, const StringId &rhs)
+constexpr const bool operator!=(const StringId& lhs, const StringId &rhs)
 {
   return lhs.GetValue() != rhs.GetValue();
 }
@@ -55,12 +55,15 @@ bool operator!=(const StringId& lhs, const StringId &rhs)
 // https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
 //-----------------------------------------------------------------------------
 
-constexpr StringId::Storage StringIdHashConcat(StringId::Storage base, const char *str)
+// disable overflow warnings due to intentional large integer multiplication
+#pragma warning (disable: 4307)
+
+constexpr const StringId::Storage StringIdHashConcat(StringId::Storage base, const char *str)
 {
     return (*str) ? (StringIdHashConcat((base * 0x100000001b3) ^ *str, str + 1)) : base;
 }
 
-const constexpr StringId::Storage StringIdHash(const char *str)
+constexpr const StringId::Storage StringIdHash(const char *str)
 {
     return StringIdHashConcat(0xcbf29ce484222325, str);
 }
