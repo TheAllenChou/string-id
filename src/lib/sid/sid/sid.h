@@ -51,7 +51,7 @@ constexpr const bool operator!=(const StringId& lhs, const StringId &rhs)
 // end: stringId declaration
 
 
-// FNV hash
+// FNV-1a hash
 // https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
 //-----------------------------------------------------------------------------
 
@@ -60,7 +60,7 @@ constexpr const bool operator!=(const StringId& lhs, const StringId &rhs)
 
 constexpr const StringId::Storage StringIdHashConcat(StringId::Storage base, const char *str)
 {
-    return (*str) ? (StringIdHashConcat((base * 0x100000001b3) ^ *str, str + 1)) : base;
+    return (*str) ? (StringIdHashConcat((base ^ *str) * 0x100000001b3 , str + 1)) : base;
 }
 
 constexpr const StringId::Storage StringIdHash(const char *str)
@@ -69,7 +69,7 @@ constexpr const StringId::Storage StringIdHash(const char *str)
 }
 
 //-----------------------------------------------------------------------------
-// end FNV hash
+// end FNV-1a hash
 
 
 // StringId macros & constants
