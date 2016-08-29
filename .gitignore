@@ -4,6 +4,7 @@ obj/
 sln/
 Debug/
 DebugDll/
+working/*.exe
 
 # SID database
 siddb.db

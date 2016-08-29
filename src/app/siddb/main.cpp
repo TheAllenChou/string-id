@@ -35,8 +35,6 @@ void PrintUsage()
 const static char* kDatabaseFile = "siddb.db";
 std::FILE* g_pDbFile = nullptr;
 
-unsigned long x = 0;
-
 bool InitDatabase()
 {
   g_pDbFile = std::fopen(kDatabaseFile, "r+");
@@ -63,6 +61,8 @@ void CleanDatabase()
   }
 
   std::remove(kDatabaseFile);
+
+  std::printf ("SID database cleaned.\n");
 }
 
 void ListDatabase()
@@ -72,20 +72,20 @@ void ListDatabase()
 
   U64 numDataEntries = 0;
   std::fseek(g_pDbFile, 0, SEEK_SET);
-  x = std::ftell(g_pDbFile);
   std::fread(&numDataEntries, sizeof(numDataEntries), 1, g_pDbFile);
-  x = std::ftell(g_pDbFile);
+
+  std::printf("Number of entries: %lld\n", numDataEntries);
+
   for (U64 i = 0; i < numDataEntries; ++i)
   {
     StringId::Storage sidVal;
     std::fread(&sidVal, sizeof(sidVal), 1, g_pDbFile);
-    x = std::ftell(g_pDbFile);
 
     char buffer[kMaxStrLen];
     fscanf_s(g_pDbFile, "%s", buffer, (int)kMaxStrLen);
     std::fseek(g_pDbFile, 1, SEEK_CUR);
     
-    std::printf("%s <-> %llx\n", buffer, sidVal);
+    std::printf("0x%16llx <-> %s\n", sidVal, buffer);
   }
 }
 
@@ -97,18 +97,14 @@ bool FindStringId(StringId::Storage data, char* pOut)
   U64 numDataEntries = 0;
   std::fseek(g_pDbFile, 0, SEEK_SET);
   std::fread(&numDataEntries, sizeof(numDataEntries), 1, g_pDbFile);
-  x = std::ftell(g_pDbFile);
   for (U64 i = 0; i < numDataEntries; ++i)
   {
-    x = std::ftell(g_pDbFile);
     StringId::Storage sidVal;
     std::fread(&sidVal, sizeof(sidVal), 1, g_pDbFile);
-    x = std::ftell(g_pDbFile);
 
     char buffer[kMaxStrLen];
     fscanf_s(g_pDbFile, "%s", buffer, (int) kMaxStrLen);
     std::fseek(g_pDbFile, 1, SEEK_CUR);
-    x = std::ftell(g_pDbFile);
 
     if (data == sidVal)
     {
@@ -127,20 +123,15 @@ bool FindStringId(const char* str, StringId::Storage* pOut)
 
   U64 numDataEntries = 0;
   std::fseek(g_pDbFile, 0, SEEK_SET);
-  x = std::ftell(g_pDbFile);
   std::fread(&numDataEntries, sizeof(numDataEntries), 1, g_pDbFile);
-  x = std::ftell(g_pDbFile);
   for (U64 i = 0; i < numDataEntries; ++i)
   {
-    x = std::ftell(g_pDbFile);
     StringId::Storage sidVal;
     std::fread(&sidVal, sizeof(sidVal), 1, g_pDbFile);
-    x = std::ftell(g_pDbFile);
 
     char buffer[kMaxStrLen];
     fscanf_s(g_pDbFile, "%s", buffer, (int)kMaxStrLen);
     std::fseek(g_pDbFile, 1, SEEK_CUR);
-    x = std::ftell(g_pDbFile);
     if (!std::strcmp(str, buffer))
     {
       *pOut = sidVal;
@@ -157,28 +148,20 @@ void SaveStringId(const char* str)
       return;
 
   U64 numDataEntries = 0;
-  x = std::ftell(g_pDbFile);
   std::fseek(g_pDbFile, 0, SEEK_SET);
-  x = std::ftell(g_pDbFile);
   std::fread(&numDataEntries, sizeof(numDataEntries), 1, g_pDbFile);
-  x = std::ftell(g_pDbFile);
   ++numDataEntries;
   std::fseek(g_pDbFile, 0, SEEK_SET);
-  x = std::ftell(g_pDbFile);
   std::fwrite(&numDataEntries, sizeof(numDataEntries), 1, g_pDbFile);
-  x = std::ftell(g_pDbFile);
 
   std::fseek(g_pDbFile, 0, SEEK_END);
-  x = std::ftell(g_pDbFile);
 
   const StringId::Storage sidVal = SID_VAL(str);
   std::fwrite(&sidVal, sizeof(sidVal), 1, g_pDbFile);
-  x = std::ftell(g_pDbFile);
 
   const char kWhiteSpace = ' ';
   std::fwrite(str, 1, std::min(kMaxStrLen, std::strlen(str)), g_pDbFile);
   std::fwrite(&kWhiteSpace, 1, 1, g_pDbFile);
-  x = std::ftell(g_pDbFile);
 }
 
 int main(int argc, const char** argv)
@@ -218,7 +201,11 @@ int main(int argc, const char** argv)
         char str[kMaxStrLen];
         if (FindStringId(sidVal, str))
         {
-          std::printf("%s <- 0x%llx", str, sidVal);
+          std::printf("0x%16llx -> %s", sidVal, str);
+        }
+        else
+        {
+          std::printf("0x%16llx -> ???", sidVal);
         }
       }
       // dec
@@ -230,7 +217,11 @@ int main(int argc, const char** argv)
         char str[kMaxStrLen];
         if (FindStringId(sidVal, str))
         {
-          std::printf("%s <- 0x%llx", str, sidVal);
+          std::printf("0x%16llx -> %s", sidVal, str);
+        }
+        else
+        {
+          std::printf("0x%16llx -> ???", sidVal);
         }
       }
       // string
@@ -239,11 +230,12 @@ int main(int argc, const char** argv)
         StringId::Storage sidVal;
         if (FindStringId(argv[1], &sidVal))
         {
-          std::printf("%s -> 0x%llx", argv[1], sidVal);
+          std::printf("%s -> 0x%16llx", argv[1], sidVal);
         }
         else
         {
           SaveStringId(argv[1]);
+          std::printf("New entry saved:\n%s -> 0x%16llx", argv[1], SID_VAL(argv[1]));
         }
       }
       break;
