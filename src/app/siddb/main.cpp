@@ -85,7 +85,7 @@ void ListDatabase()
     fscanf_s(g_pDbFile, "%s", buffer, (int)kMaxStrLen);
     std::fseek(g_pDbFile, 1, SEEK_CUR);
     
-    std::printf("0x%16llx <-> %s\n", sidVal, buffer);
+    std::printf("0x%016llx <-> %s\n", sidVal, buffer);
   }
 }
 
@@ -201,11 +201,11 @@ int main(int argc, const char** argv)
         char str[kMaxStrLen];
         if (FindStringId(sidVal, str))
         {
-          std::printf("0x%16llx -> %s", sidVal, str);
+          std::printf("0x%016llx -> %s", sidVal, str);
         }
         else
         {
-          std::printf("0x%16llx -> ???", sidVal);
+          std::printf("0x%016llx -> ???", sidVal);
         }
       }
       // dec
@@ -217,11 +217,11 @@ int main(int argc, const char** argv)
         char str[kMaxStrLen];
         if (FindStringId(sidVal, str))
         {
-          std::printf("0x%16llx -> %s", sidVal, str);
+          std::printf("0x%016llx -> %s", sidVal, str);
         }
         else
         {
-          std::printf("0x%16llx -> ???", sidVal);
+          std::printf("0x%016llx -> ???", sidVal);
         }
       }
       // string
@@ -230,12 +230,12 @@ int main(int argc, const char** argv)
         StringId::Storage sidVal;
         if (FindStringId(argv[1], &sidVal))
         {
-          std::printf("%s -> 0x%16llx", argv[1], sidVal);
+          std::printf("%s -> 0x%016llx", argv[1], sidVal);
         }
         else
         {
           SaveStringId(argv[1]);
-          std::printf("New entry saved:\n%s -> 0x%16llx", argv[1], SID_VAL(argv[1]));
+          std::printf("New entry saved:\n%s -> 0x%016llx", argv[1], SID_VAL(argv[1]));
         }
       }
       break;
