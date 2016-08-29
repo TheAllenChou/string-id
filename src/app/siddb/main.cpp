@@ -61,8 +61,6 @@ void CleanDatabase()
   }
 
   std::remove(kDatabaseFile);
-
-  std::printf ("SID database cleaned.\n");
 }
 
 void ListDatabase()
@@ -186,6 +184,7 @@ int main(int argc, const char** argv)
         else if (!std::strcmp(pOption, "clean"))
         {
           CleanDatabase();
+          std::printf("SID database cleaned.\n");
         }
         else /* if (!std::strcmp(pOption, "help")) */
         {
@@ -217,11 +216,11 @@ int main(int argc, const char** argv)
         char str[kMaxStrLen];
         if (FindStringId(sidVal, str))
         {
-          std::printf("0x%016llx -> %s", sidVal, str);
+          std::printf("0x%016llx -> %s\n", sidVal, str);
         }
         else
         {
-          std::printf("0x%016llx -> ???", sidVal);
+          std::printf("0x%016llx -> ???\n", sidVal);
         }
       }
       // string
@@ -230,12 +229,12 @@ int main(int argc, const char** argv)
         StringId::Storage sidVal;
         if (FindStringId(argv[1], &sidVal))
         {
-          std::printf("%s -> 0x%016llx", argv[1], sidVal);
+          std::printf("%s -> 0x%016llx\n", argv[1], sidVal);
         }
         else
         {
           SaveStringId(argv[1]);
-          std::printf("New entry saved:\n%s -> 0x%016llx", argv[1], SID_VAL(argv[1]));
+          std::printf("New entry saved:\n%s -> 0x%016llx\n", argv[1], SID_VAL(argv[1]));
         }
       }
       break;
