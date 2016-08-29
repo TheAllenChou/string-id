@@ -72,11 +72,22 @@ constexpr const StringId::Storage StringIdHash(const char *str)
 // end FNV hash
 
 
+// StringId macros & constants
+//-----------------------------------------------------------------------------
+
+#define SID(str) (StringId(str))
+#define SID_VAL(str) (StringIdHash(str))
+static const StringId kInvalidStringId(static_cast<StringId::Storage>(0));
+
+//-----------------------------------------------------------------------------
+// end: StringId macros & constant
+
+
 // StringId definition
 //-----------------------------------------------------------------------------
 
 StringId::StringId()
-  : m_data(0)
+  : StringId(kInvalidStringId)
 { }
 
 StringId::StringId(Storage data)
@@ -98,15 +109,4 @@ const StringId StringId::Concat(const char *str) const
 }
 
 //-----------------------------------------------------------------------------
-// end: StringId definition
-
-
-// StringId macros & constants
-//-----------------------------------------------------------------------------
-
-#define SID(str) (StringId(str))
-#define SID_VAL(str) (StringIdHash(str))
-static const StringId kInvalidStringId(static_cast<StringId::Storage>(0));
-
-//-----------------------------------------------------------------------------
-// end: StringId macros & constants
+// end: StringId definitions
