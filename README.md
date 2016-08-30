@@ -21,6 +21,7 @@ This repository contains several projects:
   * sid: Core library (single header file).
   * siddb: Lightweight SID database library.
   * sidbot: Executable that manipulates SID database.
+  * sidnet: Networking library for SID server and client (not implemented yet).
   * sidserver: Remote SID database server (not implemented yet).
   * sidclient: Remove SID database client (not implemented yet).
   * sidvsdebug: Autoexp add-in for Visual Studio debugging (not implemented yet).
