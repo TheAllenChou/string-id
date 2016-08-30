@@ -9,8 +9,12 @@
 #pragma once
 
 
-// StringId declaration
+// FNV-1a hash
+// https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
 //-----------------------------------------------------------------------------
+
+// disable overflow warnings due to intentional large integer multiplication
+#pragma warning (disable: 4307)
 
 constexpr const unsigned long long StringIdHashConcat(unsigned long long base, const char *str)
 {
@@ -21,6 +25,13 @@ constexpr const unsigned long long StringIdHash(const char *str)
 {
   return StringIdHashConcat(0xcbf29ce484222325, str);
 }
+
+//-----------------------------------------------------------------------------
+// end FNV-1a hash
+
+
+// String ID
+//-----------------------------------------------------------------------------
 
 class StringId
 {
@@ -66,18 +77,7 @@ static const bool operator!=(const StringId& lhs, const StringId &rhs)
 }
 
 //-----------------------------------------------------------------------------
-// end: stringId declaration
-
-
-// FNV-1a hash
-// https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
-//-----------------------------------------------------------------------------
-
-// disable overflow warnings due to intentional large integer multiplication
-#pragma warning (disable: 4307)
-
-//-----------------------------------------------------------------------------
-// end FNV-1a hash
+// end: String ID
 
 
 // StringId macros & constants
