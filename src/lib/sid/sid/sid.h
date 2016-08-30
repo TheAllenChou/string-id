@@ -12,6 +12,16 @@
 // StringId declaration
 //-----------------------------------------------------------------------------
 
+constexpr const unsigned long long StringIdHashConcat(unsigned long long base, const char *str)
+{
+  return (*str) ? (StringIdHashConcat((base ^ *str) * 0x100000001b3 , str + 1)) : base;
+}
+
+constexpr const unsigned long long StringIdHash(const char *str)
+{
+  return StringIdHashConcat(0xcbf29ce484222325, str);
+}
+
 class StringId
 {
   public:
@@ -19,32 +29,38 @@ class StringId
     typedef unsigned long long Storage;
     static_assert(sizeof(Storage) == 8, "StringId requires 64-bit storage");
 
-    static const StringId Concat(const StringId &sid, const char *str);
+    StringId() : StringId(static_cast<Storage>(0)) { }
+    explicit StringId(Storage data) : m_data(data) { }
+    explicit StringId::StringId(const char *str) : m_data(StringIdHash(str)) { }
 
-    StringId();
-    explicit StringId(Storage data);
-    explicit StringId(const char *str);
+    static const StringId StringId::Concat(const StringId &sid, const char *str)
+    {
+      return sid.Concat(str);
+    }
 
-    const StringId Concat(const char *str) const;
+    const StringId StringId::Concat(const char *str) const
+    {
+      return StringId(StringIdHashConcat(m_data, str));
+    }
 
-    constexpr const Storage GetValue() const { return m_data; }
+    const Storage GetValue() const { return m_data; }
 
   private:
     
     Storage m_data;
 };
 
-std::ostream& operator<<(std::ostream &out, StringId sid)
+static std::ostream& operator<<(std::ostream &out, StringId sid)
 {
     return out << "sid:" << sid.GetValue();
 }
 
-constexpr const bool operator==(const StringId& lhs, const StringId &rhs)
+static const bool operator==(const StringId& lhs, const StringId &rhs)
 {
     return lhs.GetValue() == rhs.GetValue();
 }
 
-constexpr const bool operator!=(const StringId& lhs, const StringId &rhs)
+static const bool operator!=(const StringId& lhs, const StringId &rhs)
 {
   return lhs.GetValue() != rhs.GetValue();
 }
@@ -60,16 +76,6 @@ constexpr const bool operator!=(const StringId& lhs, const StringId &rhs)
 // disable overflow warnings due to intentional large integer multiplication
 #pragma warning (disable: 4307)
 
-constexpr const StringId::Storage StringIdHashConcat(StringId::Storage base, const char *str)
-{
-    return (*str) ? (StringIdHashConcat((base ^ *str) * 0x100000001b3 , str + 1)) : base;
-}
-
-constexpr const StringId::Storage StringIdHash(const char *str)
-{
-    return StringIdHashConcat(0xcbf29ce484222325, str);
-}
-
 //-----------------------------------------------------------------------------
 // end FNV-1a hash
 
@@ -79,36 +85,7 @@ constexpr const StringId::Storage StringIdHash(const char *str)
 
 #define SID(str) (StringId(str))
 #define SID_VAL(str) (StringIdHash(str))
-static const StringId kInvalidStringId(static_cast<StringId::Storage>(0));
+static const StringId kInvalidStringId;
 
 //-----------------------------------------------------------------------------
 // end: StringId macros & constant
-
-
-// StringId definition
-//-----------------------------------------------------------------------------
-
-StringId::StringId()
-  : StringId(kInvalidStringId)
-{ }
-
-StringId::StringId(Storage data)
-  : m_data(data)
-{ }
-
-StringId::StringId(const char *str)
-  : m_data(StringIdHash(str))
-{ }
-
-const StringId StringId::Concat(const StringId &sid, const char *str)
-{
-  return sid.Concat(str);
-}
-
-const StringId StringId::Concat(const char *str) const
-{
-  return StringId(StringIdHashConcat(m_data, str));
-}
-
-//-----------------------------------------------------------------------------
-// end: StringId definitions

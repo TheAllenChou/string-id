@@ -19,7 +19,10 @@ For more explanations, check out these articles:
 
 This repository contains several projects:  
   * sid: Core library (single header file).
-  * siddb: Lightweight database to keep track of SID hashes for debug purposes (WIP).
+  * siddb: Lightweight SID database library.
+  * sidbot: Executable that manipulates SID database.
+  * sidserver: Remote SID database server (not implemented yet).
+  * sidclient: Remove SID database client (not implemented yet).
   * sidvsdebug: Autoexp add-in for Visual Studio debugging (not implemented yet).
   * unit-test: Library unit tests.
 

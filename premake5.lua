@@ -14,7 +14,7 @@ local winApps =
 --   same name as the folder the project's source code is located in
 local consoleApps =
 {
-  "siddb",      -- SID database
+  "sidbot",     -- SID database manipulator
   "unit-test",  -- unit test
 }
 -- Table of projects that use Unicode.  These names should have the
@@ -27,7 +27,9 @@ local unicodeApps =
 --   same name as the folder the project's source code is located in.
 local staticLibs =
 {
-  "sid",  -- SID library
+  "sid",     -- SID core library
+  "siddb",   -- SID database
+  "sidnet",  -- SID network library
 }
 -- Table of static librari projects to create.  These names should have the
 --   same name as the folder the project's source code is located in.
