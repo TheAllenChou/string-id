@@ -103,7 +103,7 @@ struct CppUnitTestPlugIn
  *
  * The signature of the exported function is:
  * \code
- * CppUnitTestPlugIn *CPPUNIT_PLUGIN_EXPORTED_NAME(void);
+ * CppUnitTestPlugIn *CPPUNIT_PLUGIN_EXPORTED_NAME();
  * \endcode
  */
 #define CPPUNIT_PLUGIN_EXPORTED_NAME cppunitTestPlugIn
@@ -118,7 +118,7 @@ typedef CppUnitTestPlugIn *(*TestPlugInSignature)();
  * \ingroup WritingTestPlugIn
  */
 #define CPPUNIT_PLUGIN_EXPORTED_FUNCTION_IMPL( TestPlugInInterfaceType )       \
-  CPPUNIT_PLUGIN_EXPORT CppUnitTestPlugIn *CPPUNIT_PLUGIN_EXPORTED_NAME(void)  \
+  CPPUNIT_PLUGIN_EXPORT CppUnitTestPlugIn *CPPUNIT_PLUGIN_EXPORTED_NAME()  \
   {                                                                            \
     static TestPlugInInterfaceType plugIn;                                     \
     return &plugIn;                                                            \

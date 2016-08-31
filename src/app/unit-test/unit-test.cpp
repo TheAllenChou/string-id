@@ -13,7 +13,7 @@
 // Registers the fixture into the 'registry'
 CPPUNIT_TEST_SUITE_REGISTRATION(SidUnitTest);
 
-void SidUnitTest::TestHash(void)
+void SidUnitTest::TestHash()
 {
   const StringId s0 = kInvalidStringId;
   const StringId s1("test");
@@ -32,7 +32,7 @@ void SidUnitTest::TestHash(void)
   }
 }
 
-void SidUnitTest::TestConcat(void)
+void SidUnitTest::TestConcat()
 {
   CPPUNIT_ASSERT_EQUAL(SID("abcd"), SID("ab").Concat("cd"));
   CPPUNIT_ASSERT_EQUAL(SID("abcd"), SID("a").Concat("b").Concat("c").Concat("d"));

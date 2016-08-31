@@ -6,7 +6,7 @@
  */
 /******************************************************************************/
 
-int main(void)
+int main()
 {
   // Get the top level suite from the registry
   CppUnit::Test *suite = 

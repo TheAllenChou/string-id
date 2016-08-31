@@ -17,6 +17,6 @@ class SidUnitTest : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE_END();
 
   public:
-    void TestHash(void);
-    void TestConcat(void);
+    void TestHash();
+    void TestConcat();
 };

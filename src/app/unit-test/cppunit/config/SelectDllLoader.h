@@ -34,7 +34,7 @@
  * \code
  * #include <cppunit/include/plugin/TestPlugIn.h>
  *
- * CPPUNIT_PLUGIN_EXPORT CppUnitTestPlugIn *CPPUNIT_PLUGIN_EXPORTED_NAME(void)
+ * CPPUNIT_PLUGIN_EXPORT CppUnitTestPlugIn *CPPUNIT_PLUGIN_EXPORTED_NAME()
  * {
  *   ...
  *   return &myPlugInInterface;
