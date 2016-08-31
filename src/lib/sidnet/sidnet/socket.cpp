@@ -76,9 +76,9 @@ namespace sidnet
     int ret = 0;
     
     //store local address
-    hostent* localhost;
-    localhost = gethostbyname("");
-    m_ipStr = inet_ntoa(*(in_addr*)*localhost->h_addr_list);
+    hostent* pLocalHost;
+    pLocalHost = gethostbyname("");
+    m_ipStr = inet_ntoa(*(in_addr*)*pLocalHost->h_addr_list);
     
     //local
     sockaddr_in localAddress;

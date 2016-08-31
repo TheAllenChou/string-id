@@ -14,39 +14,39 @@ namespace sidnet
   //call Socket::onConnect here
   DWORD WINAPI ServerAcceptMain(void *pData)
   {
-    ServerAcceptThreadData *stData = static_cast<ServerAcceptThreadData *>(pData);
-    Server *server = stData->server;
-    delete stData; //not needed any more
+    ServerAcceptThreadData *pSatData = static_cast<ServerAcceptThreadData *>(pData);
+    Server *pServer = pSatData->server;
+    delete pSatData; //not needed any more
     
     //continuously accept new client sockets
     while (1)
     {
       //break when shut down
-      EnterCriticalSection(&(server->m_activeCriticalSection));
-        if (!(server->m_active))
+      EnterCriticalSection(&(pServer->m_activeCriticalSection));
+        if (!(pServer->m_active))
         {
-          LeaveCriticalSection(&server->m_activeCriticalSection);
+          LeaveCriticalSection(&pServer->m_activeCriticalSection);
           break;
         }
-      LeaveCriticalSection(&(server->m_activeCriticalSection));
+      LeaveCriticalSection(&(pServer->m_activeCriticalSection));
       
       
       int err = 0;
-      Socket *clientSocket = server->m_pServerSocket->Accept(&err);
+      Socket *pClientSocket = pServer->m_pServerSocket->Accept(&err);
       
-      if (!clientSocket)
+      if (!pClientSocket)
       {
         std::cout << "Error accepting socket: " << err << std::endl;
         continue;
       }
       
       //pass to Server::onAccept
-      server->OnAccept(clientSocket);
+      pServer->OnAccept(pClientSocket);
       
       //start thread to handle client
       ServerClientHandlerData *schData = new ServerClientHandlerData;
-      schData->server = server;
-      schData->clientSocket = clientSocket;
+      schData->server = pServer;
+      schData->clientSocket = pClientSocket;
       CreateThread(0, 0, ServerClientHandlerMain, static_cast<void *>(schData), 0, 0);
     }
     
@@ -57,10 +57,10 @@ namespace sidnet
   //call Server::OnReceive and Server::OnDisconnect here
   DWORD WINAPI ServerClientHandlerMain(void *pData)
   {
-    ServerClientHandlerData *schData = static_cast<ServerClientHandlerData *>(pData);
-    Server *server = schData->server;
-    Socket *clientSocket = schData->clientSocket;
-    delete schData; //no longer needed;
+    ServerClientHandlerData *pSchData = static_cast<ServerClientHandlerData *>(pData);
+    Server *pServer = pSchData->server;
+    Socket *pClientSOcket = pSchData->clientSocket;
+    delete pSchData; //no longer needed;
     
     
     unsigned int messageSize = 256;
@@ -70,13 +70,13 @@ namespace sidnet
     while (1)
     {
       //break when server is shut down
-      EnterCriticalSection(&(server->m_activeCriticalSection));
-      if (!(server->m_active))
+      EnterCriticalSection(&(pServer->m_activeCriticalSection));
+      if (!(pServer->m_active))
       {
-        LeaveCriticalSection(&server->m_activeCriticalSection);
+        LeaveCriticalSection(&pServer->m_activeCriticalSection);
         break;
       }
-      LeaveCriticalSection(&(server->m_activeCriticalSection));
+      LeaveCriticalSection(&(pServer->m_activeCriticalSection));
       
       
       int charsToReceive = 0;
@@ -86,7 +86,7 @@ namespace sidnet
       dataSize = charsToReceive = 4;
       while (charsToReceive)
       {
-        int ret = clientSocket->Read(buffer + (dataSize - charsToReceive), charsToReceive);
+        int ret = pClientSOcket->Read(buffer + (dataSize - charsToReceive), charsToReceive);
 
         if (ret == SOCKET_ERROR)
         {
@@ -100,18 +100,18 @@ namespace sidnet
           else
           {
             //error, shut down
-            server->OnDisconnect(clientSocket);
-            clientSocket->shutdown();
-            delete clientSocket;
+            pServer->OnDisconnect(pClientSOcket);
+            pClientSOcket->shutdown();
+            delete pClientSOcket;
             return err;
           }
         }
         else if (ret == 0)
         {
           //client connection ended
-          server->OnDisconnect(clientSocket);
-          int ret =  clientSocket->shutdown();
-          delete clientSocket;
+          pServer->OnDisconnect(pClientSOcket);
+          int ret =  pClientSOcket->shutdown();
+          delete pClientSOcket;
           return ret;
         }
 
@@ -146,7 +146,7 @@ namespace sidnet
       dataSize = charsToReceive = deserializedMessageSize;
       while (charsToReceive)
       {
-        int ret = clientSocket->Read(buffer + (dataSize - charsToReceive), charsToReceive);
+        int ret = pClientSOcket->Read(buffer + (dataSize - charsToReceive), charsToReceive);
 
         if (ret == SOCKET_ERROR)
         {
@@ -160,17 +160,17 @@ namespace sidnet
           else
           {
             //error, shut down
-            server->OnDisconnect(clientSocket);
-            clientSocket->shutdown();
+            pServer->OnDisconnect(pClientSOcket);
+            pClientSOcket->shutdown();
             return err;
           }
         }
         else if (ret == 0)
         {
           //client connection ended
-          server->OnDisconnect(clientSocket);
-          int ret = clientSocket->shutdown();
-          delete clientSocket;
+          pServer->OnDisconnect(pClientSOcket);
+          int ret = pClientSOcket->shutdown();
+          delete pClientSOcket;
           return ret;
         }
 
@@ -181,13 +181,13 @@ namespace sidnet
 
 
       //sufficient string information, call Client::OnReceive
-      int ret = server->OnReceive(clientSocket, buffer, dataSize);
+      int ret = pServer->OnReceive(pClientSOcket, buffer, dataSize);
       if (ret)
       {
         //shut down
-        server->OnDisconnect(clientSocket);
-        int ret = clientSocket->shutdown();
-        delete clientSocket;
+        pServer->OnDisconnect(pClientSOcket);
+        int ret = pClientSOcket->shutdown();
+        delete pClientSOcket;
         return ret;
       }
     }

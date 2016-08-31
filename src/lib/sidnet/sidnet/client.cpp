@@ -13,11 +13,11 @@ namespace sidnet
   DWORD WINAPI ClientReceiveMain(void *data)
   {
     ClientReceiveMainData *pCrmData = static_cast<ClientReceiveMainData *>(data);
-    Client *client = pCrmData->m_pClient;
+    Client *pClient = pCrmData->m_pClient;
     delete pCrmData; //no longer needed
     
     size_t messageSize = 256;
-    char *buffer = new char[messageSize];
+    char *pBuffer = new char[messageSize];
     
     
     //main receive loop
@@ -32,7 +32,7 @@ namespace sidnet
       dataSize = charsToReceive = 4;
       while (charsToReceive)
       {
-        int ret = client->m_pSocket->Read(buffer + (dataSize - charsToReceive), charsToReceive);
+        int ret = pClient->m_pSocket->Read(pBuffer + (dataSize - charsToReceive), charsToReceive);
         
         if (ret == SOCKET_ERROR)
         {
@@ -46,14 +46,14 @@ namespace sidnet
           else
           {
             //error, shut down
-            client->m_pSocket->shutdown();
+            pClient->m_pSocket->shutdown();
             return err;
           }
         }
         else if (ret == 0)
         {
           //connection ended
-          return client->m_pSocket->shutdown();
+          return pClient->m_pSocket->shutdown();
         }
         
         //decrement chars to receive
@@ -64,22 +64,22 @@ namespace sidnet
       
       //deserialize size_t
       size_t deserializedMessageSize = 0;
-      deserializedMessageSize |= static_cast<unsigned char>(buffer[0]) << 24;
-      deserializedMessageSize |= static_cast<unsigned char>(buffer[1]) << 16;
-      deserializedMessageSize |= static_cast<unsigned char>(buffer[2]) <<  8;
-      deserializedMessageSize |= static_cast<unsigned char>(buffer[3]) <<  0;
+      deserializedMessageSize |= static_cast<unsigned char>(pBuffer[0]) << 24;
+      deserializedMessageSize |= static_cast<unsigned char>(pBuffer[1]) << 16;
+      deserializedMessageSize |= static_cast<unsigned char>(pBuffer[2]) <<  8;
+      deserializedMessageSize |= static_cast<unsigned char>(pBuffer[3]) <<  0;
       
       //buffer not large enough, double each iteration
       if (deserializedMessageSize > messageSize)
       {
-        delete buffer;
+        delete pBuffer;
         
         do 
         {
           messageSize <<= 1;
         } while (deserializedMessageSize > messageSize);
         
-        buffer = new char[messageSize];
+        pBuffer = new char[messageSize];
       }
       
       
@@ -87,7 +87,7 @@ namespace sidnet
       dataSize = charsToReceive = deserializedMessageSize;
       while (charsToReceive)
       {
-        int ret = client->m_pSocket->Read(buffer + (dataSize - charsToReceive), charsToReceive);
+        int ret = pClient->m_pSocket->Read(pBuffer + (dataSize - charsToReceive), charsToReceive);
         
         if (ret == SOCKET_ERROR)
         {
@@ -101,14 +101,14 @@ namespace sidnet
           else
           {
             //error, shut down
-            client->m_pSocket->shutdown();
+            pClient->m_pSocket->shutdown();
             return err;
           }
         }
         else if (ret == 0)
         {
           //connection ended
-          return client->m_pSocket->shutdown();
+          return pClient->m_pSocket->shutdown();
         }
 
         //decrement chars to receive
@@ -118,11 +118,11 @@ namespace sidnet
       
       
       //sufficient string information, call Client::OnReceive
-      int ret = client->OnReceive(buffer, dataSize);
+      int ret = pClient->OnReceive(pBuffer, dataSize);
       if (ret)
       {
         //shut down
-        client->m_pSocket->shutdown();
+        pClient->m_pSocket->shutdown();
         break;
       }
     }
