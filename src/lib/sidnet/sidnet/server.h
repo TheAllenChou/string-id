@@ -48,17 +48,14 @@ namespace sidnet
       int Shutdown();
 
       ///Sends string. Returns 0 when successful.
-      int Send(Socket *pSocket, const std::string &message);
-
-      ///Sends string. Returns 0 when successful.
-      int Send(Socket *pSocket, const char *message);
+      int Send(Socket *pSocket, const char *pBuffe, size_t size);
       
     protected:
       ///Called when a new client socket is accepted.
       virtual int OnAccept(Socket *pSocket);
       
       ///Called when a received a message string from a client socket.
-      virtual int OnReceive(Socket *pSocket, const std::string &message);
+      virtual int OnReceive(Socket *pSocket, const char *pBuffer, size_t size);
       
       ///Called when a client socket is disconnected.
       virtual int OnDisconnect(Socket *pSocket);

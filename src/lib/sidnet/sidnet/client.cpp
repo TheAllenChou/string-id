@@ -117,8 +117,8 @@ namespace sidnet
       }
       
       
-      //sufficient string information, call Client::onReceive
-      int ret = client->onReceive(std::string(buffer, dataSize));
+      //sufficient string information, call Client::OnReceive
+      int ret = client->OnReceive(buffer, dataSize);
       if (ret)
       {
         //shut down
@@ -165,22 +165,19 @@ namespace sidnet
     return 0;
   }
 
-  int Client::onReceive(const std::string &message)
+  int Client::OnReceive(const char *pBuffer, size_t size)
   {
     return 0;
   }
   
-  int Client::send(const std::string &message)
+  int Client::Send(const char *pBuffer, size_t size)
   {
-    const size_t dataSize = message.size();
-    const char *pData = message.c_str();
-    
     //4-byte size_t for string size
     char sizeBuffer[4] = {0};
-    sizeBuffer[0] = char((dataSize & 0xFF000000) >> 24);
-    sizeBuffer[1] = char((dataSize & 0x00FF0000) >> 16);
-    sizeBuffer[2] = char((dataSize & 0x0000FF00) >>  8);
-    sizeBuffer[3] = char((dataSize & 0x000000FF) >>  0);
+    sizeBuffer[0] = char((size & 0xFF000000) >> 24);
+    sizeBuffer[1] = char((size & 0x00FF0000) >> 16);
+    sizeBuffer[2] = char((size & 0x0000FF00) >>  8);
+    sizeBuffer[3] = char((size & 0x000000FF) >>  0);
     
     
     size_t charsToSend = 0;
@@ -213,10 +210,10 @@ namespace sidnet
     
     
     //send string
-    charsToSend = dataSize;
+    charsToSend = size;
     while (charsToSend)
     {
-      int ret = m_pSocket->Send(pData + (dataSize - charsToSend), charsToSend);
+      int ret = m_pSocket->Send(pBuffer + (size - charsToSend), charsToSend);
       
       if (ret == SOCKET_ERROR)
       {
@@ -241,8 +238,4 @@ namespace sidnet
     return 0;
   }
   
-  int Client::send(const char *pData)
-  {
-    return send(std::string(pData));
-  }
 }

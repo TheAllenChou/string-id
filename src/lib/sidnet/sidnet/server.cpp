@@ -54,7 +54,7 @@ namespace sidnet
   }
   
   //server client handler
-  //call Server::onReceive and Server::onDisconnect here
+  //call Server::OnReceive and Server::OnDisconnect here
   DWORD WINAPI ServerClientHandlerMain(void *pData)
   {
     ServerClientHandlerData *schData = static_cast<ServerClientHandlerData *>(pData);
@@ -180,8 +180,8 @@ namespace sidnet
       }
 
 
-      //sufficient string information, call Client::onReceive
-      int ret = server->OnReceive(clientSocket, std::string(buffer, dataSize));
+      //sufficient string information, call Client::OnReceive
+      int ret = server->OnReceive(clientSocket, buffer, dataSize);
       if (ret)
       {
         //shut down
@@ -240,17 +240,14 @@ namespace sidnet
     return ret;
   }
   
-  int Server::Send(Socket *pSocket, const std::string &message)
+  int Server::Send(Socket *pSocket, const char *pBuffer, size_t size)
   {
-    const size_t dataSize = message.size();
-    const char *pData = message.c_str();
-
     //4-byte unsigned int for string size
     char sizeBuffer[4] = {0};
-    sizeBuffer[0] = char((dataSize & 0xFF000000) >> 24);
-    sizeBuffer[1] = char((dataSize & 0x00FF0000) >> 16);
-    sizeBuffer[2] = char((dataSize & 0x0000FF00) >>  8);
-    sizeBuffer[3] = char((dataSize & 0x000000FF) >>  0);
+    sizeBuffer[0] = char((size & 0xFF000000) >> 24);
+    sizeBuffer[1] = char((size & 0x00FF0000) >> 16);
+    sizeBuffer[2] = char((size & 0x0000FF00) >>  8);
+    sizeBuffer[3] = char((size & 0x000000FF) >>  0);
 
 
     size_t charsToSend = 0;
@@ -283,10 +280,10 @@ namespace sidnet
 
 
     //send string
-    charsToSend = dataSize;
+    charsToSend = size;
     while (charsToSend)
     {
-      int ret = pSocket->Send(pData + (dataSize - charsToSend), charsToSend);
+      int ret = pSocket->Send(pBuffer + (size - charsToSend), charsToSend);
 
       if (ret == SOCKET_ERROR)
       {
@@ -311,11 +308,6 @@ namespace sidnet
     return 0;
   }
 
-  int Server::Send(Socket *pSocket, const char *pData)
-  {
-    return Send(pSocket, std::string(pData));
-  }
-  
   int Server::Shutdown()
   {
     return 0;
@@ -326,7 +318,7 @@ namespace sidnet
     return 0;
   }
   
-  int Server::OnReceive(Socket *pSocket, const std::string &message)
+  int Server::OnReceive(Socket *pSocket, const char *pBuffer, size_t size)
   {
     return 0;
   }

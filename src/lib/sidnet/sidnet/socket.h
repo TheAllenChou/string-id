@@ -40,10 +40,10 @@ namespace sidnet
       
       
       ///Sends bytes to remote socket.
-      int Send(const char *buffer, const size_t size);
+      int Send(const char *pBuffer, const size_t size);
 
       ///Read bytes from remote socket.
-      int Read(char *buffer, const size_t size);
+      int Read(char *pBuffer, const size_t size);
   };
 
 }

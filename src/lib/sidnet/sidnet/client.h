@@ -39,13 +39,11 @@ namespace sidnet
     protected:
       ///Processes received message.
       ///Return non-zero to end connection.
-      virtual int onReceive(const std::string &message);
+      virtual int OnReceive(const char *pBuffer, size_t size);
       
     public:
-      ///Sends string. Returns 0 when successful.
-      int send(const std::string &message);
       
       ///Sends string. Returns 0 when successful.
-      int send(const char *message);
+      int Send(const char *pBuffer, size_t size);
   };
 }
