@@ -32,32 +32,38 @@ namespace sidnet
     friend DWORD WINAPI ServerAcceptMain(void *pData);
     friend DWORD WINAPI ServerClientHandlerMain(void *pData);
     
-    private:
-      bool m_active;
-      CRITICAL_SECTION m_activeCriticalSection;
-      ServerSocket *m_pServerSocket;
-      
     public:
       Server();
       ~Server();
       
-      ///Starts the server.
+      // start the server
       int Start(const unsigned short port);
       
-      ///Shuts down the server.
-      int Shutdown();
+      // shud down the server
+      int ShutDown();
 
-      ///Sends string. Returns 0 when successful.
+      // send buffer
       int Send(Socket *pSocket, const char *pBuffe, size_t size);
       
     protected:
-      ///Called when a new client socket is accepted.
-      virtual int OnAccept(Socket *pSocket);
+      // called when started
+      virtual void OnStart() { }
+
+      // called when shut down
+      virtual void OnShutDown() { }
+
+      // called when a new client socket is accepted
+      virtual void OnAccept(Socket *pSocket) { }
       
-      ///Called when a received a message string from a client socket.
-      virtual int OnReceive(Socket *pSocket, const char *pBuffer, size_t size);
+      // called when a received a message string from a client socket
+      virtual int OnReceive(Socket *pSocket, const char *buffer, size_t size) { return 0; }
       
-      ///Called when a client socket is disconnected.
-      virtual int OnDisconnect(Socket *pSocket);
+      // Called when a client socket is disconnected
+      virtual void OnDisconnect(Socket *pSocket) { }
+
+    private:
+      bool m_active;
+      CRITICAL_SECTION m_activeCriticalSection;
+      ServerSocket *m_pServerSocket;
   };
 }

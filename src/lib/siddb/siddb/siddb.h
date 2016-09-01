@@ -8,6 +8,9 @@
 
 #pragma once
 
+#include <cstdio>
+#include <functional>
+
 #include "sid/sid.h"
 
 namespace siddb
@@ -26,7 +29,7 @@ namespace siddb
   bool ForEach(std::function<bool(StringId, const char*)> callback);
 
   bool Find(StringId sid, char *pOut);
-  bool Find(const char* str, StringId *pOut);
+  bool Find(const char *str, StringId *pOut);
 
   bool Add(const char *str);
 

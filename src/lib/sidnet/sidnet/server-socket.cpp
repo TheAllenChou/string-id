@@ -1,7 +1,7 @@
 /******************************************************************************/
 /*
   Author  - Ming-Lun "Allen" Chou
-  Web     - http://AllenChou.net
+  Web     - http:// AllenChou.net
   Twitter 
   eAllenChou
  */
@@ -15,10 +15,10 @@ namespace sidnet
   { }
 
   int ServerSocket::Listen(const unsigned short port)
-  { //return value
-    int ret = 0;
+  { // return value
+    int err = 0;
 
-    //listener address
+    // listener address
     sockaddr_in listenerAddress;
     hostent* pLocalHost;
     char* localIpStr;
@@ -32,31 +32,31 @@ namespace sidnet
     std::cout << "Local IP: " << localIpStr << std::endl;
     std::cout << "Port: " << port << std::endl;
     
-    //listener socket
+    // listener socket
     m_wsSocket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, 0);
 
-    //handle errors
+    // handle errors
     if(m_wsSocket == INVALID_SOCKET)
     {
-      int err = WSAGetLastError();
+      err = WSAGetLastError();
       std::cout << "Error creating server socket: " << err << std::endl;
       return err;
     }
     
-    //bind socket
-    ret = bind(m_wsSocket, (SOCKADDR*)&listenerAddress, sizeof(listenerAddress));
-    if(ret == SOCKET_ERROR)
+    // bind socket
+    err = bind(m_wsSocket, (SOCKADDR*)&listenerAddress, sizeof(listenerAddress));
+    if(err == SOCKET_ERROR)
     {
-      int err = WSAGetLastError();
+      err = WSAGetLastError();
       std::cout << "Error binding server socket: " << err << std::endl;
       return err;
     }
     
-    //listen for connection
-    ret = ::listen(m_wsSocket, 10);
-    if(ret == SOCKET_ERROR)
+    // listen for connection
+    err = ::listen(m_wsSocket, 10);
+    if(err == SOCKET_ERROR)
     {
-      int err = WSAGetLastError();
+      err = WSAGetLastError();
       std::cout << "Error listening to port " << port << ": " << err << std::endl;
       return err;
     }
@@ -72,7 +72,7 @@ namespace sidnet
     SecureZeroMemory(&clientEndpoint, clientEndpointSize);
     client = ::accept(m_wsSocket, (sockaddr*)&clientEndpoint, &clientEndpointSize);
     
-    //non-blocking
+    // non-blocking
     u_long iMode = 1;
     ioctlsocket(client, FIONBIO, &iMode);
     
@@ -96,20 +96,20 @@ namespace sidnet
     return socket;
   }
 
-  int ServerSocket::Shutdown()
+  int ServerSocket::ShutDown()
   {
-    int ret = 0;
+    int err = 0;
     
-    ret = ::shutdown(m_wsSocket, SD_BOTH);
-    if (ret == SOCKET_ERROR)
+    err = ::shutdown(m_wsSocket, SD_BOTH);
+    if (err == SOCKET_ERROR)
     {
       int err = WSAGetLastError();
       std::cout << "Error shutting down server socket." << std::endl;
       return err;
     }
     
-    ret = ::closesocket(m_wsSocket);
-    if (ret == SOCKET_ERROR)
+    err = ::closesocket(m_wsSocket);
+    if (err == SOCKET_ERROR)
     {
       int err = WSAGetLastError();
       std::cout << "Error closing server socket." << std::endl;

@@ -14,21 +14,20 @@ namespace sidnet
 {
   class ServerSocket
   {
-    private:
-      ///underlying WinSock socket
-      SOCKET m_wsSocket;
-
     public:
       ServerSocket();
 
-      ///Listens for incoming connection.
+      // listen for incoming connection
       int Listen(const unsigned short port);
 
-      ///Accepts incoming connection.
+      // accept incoming connection
       Socket *Accept(int *pErrCode);
       Socket *Accept();
 
-      ///Shuts down the server socket.
-      int Shutdown();
+      // shut down the server socket
+      int ShutDown();
+
+    private:
+      SOCKET m_wsSocket;
   };
 }

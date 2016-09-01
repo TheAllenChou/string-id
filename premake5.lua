@@ -15,6 +15,8 @@ local winApps =
 local consoleApps =
 {
   "sidbot",     -- SID database manipulator
+  "sidserver",  -- SID database server
+  "sidclient",  -- SID database client
   "unit-test",  -- unit test
 }
 -- Table of projects that use Unicode.  These names should have the

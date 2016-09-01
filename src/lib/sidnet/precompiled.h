@@ -13,7 +13,6 @@
 #include <cstdio>
 #include <cstring>
 #include <iostream>
-#include <string>
 
 // Windows & Winsock
 #define WIN32_LEAN_AND_MEAN

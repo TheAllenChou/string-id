@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "socket.h"
+#include "sidnet/socket.h"
 
 namespace sidnet
 {
@@ -27,7 +27,7 @@ namespace sidnet
     
     private:
       Socket *m_pSocket;
-      CRITICAL_SECTION m_socketCriticalSection; //locking send and receive
+      CRITICAL_SECTION m_socketCriticalSection;
       
     public:
       Client();
@@ -37,13 +37,12 @@ namespace sidnet
       int ShutDown();
       
     protected:
-      ///Processes received message.
-      ///Return non-zero to end connection.
-      virtual int OnReceive(const char *pBuffer, size_t size);
+      // processe received message
+      // return non-zero to end connection
+      virtual int OnReceive(const char *buffer, size_t size);
       
     public:
-      
-      ///Sends string. Returns 0 when successful.
-      int Send(const char *pBuffer, size_t size);
+      // send string
+      int Send(const char *buffer, size_t size);
   };
 }
