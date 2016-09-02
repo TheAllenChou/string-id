@@ -75,7 +75,7 @@ void SidUnitTest::TestNetBufferFormatFixedSize()
   CPPUNIT_ASSERT_EQUAL(4.0, d);
 }
 
-void SidUnitTest::TestNetBufferFormatString()
+void SidUnitTest::TestNetBufferFormatCString()
 {
   typedef sidnet::BufferFormat<float, char *, double> Format;
 
@@ -100,11 +100,47 @@ void SidUnitTest::TestNetBufferFormatString()
   CPPUNIT_ASSERT(!memcmp(refBuffer, testBuffer, testStrLen));
 
   float f;
-  char s[128];
-  char *ps = s;
+  char *s = new char[128];
   double d;
 
-  Format::Read(refBuffer, f, ps, d);
+  Format::Read(refBuffer, f, s, d);
+
+  CPPUNIT_ASSERT_EQUAL(1.0f, f);
+  CPPUNIT_ASSERT(!std::memcmp(testStr, s, testStrLen));
+  CPPUNIT_ASSERT_EQUAL(2.0, d);
+
+  delete s;
+}
+
+void SidUnitTest::TestNetBufferFormatStringBuffer()
+{
+  typedef sidnet::BufferFormat<float, char *, double> Format;
+
+  const size_t refFixedSize = sizeof(float) + sizeof(size_t) + sizeof(double);
+
+  CPPUNIT_ASSERT_EQUAL(refFixedSize, Format::GetFixedSize());
+
+  const char testStr[] = "test-string";
+  const size_t testStrLen = std::strlen(testStr);
+  const size_t refSize = refFixedSize + testStrLen;
+
+  char refBuffer[128];
+  char testBuffer[128];
+
+  Format::Write(testBuffer, 1.0f, testStr, 2.0);
+
+  *reinterpret_cast<float *>(refBuffer) = 1.0f;
+  *reinterpret_cast<size_t *>(refBuffer + sizeof(float)) = testStrLen;
+  std::memcpy(refBuffer + sizeof(float) + sizeof(size_t), testStr, testStrLen);
+  *reinterpret_cast<double *>(refBuffer + sizeof(float) + sizeof(size_t) + testStrLen) = 2.0;
+
+  CPPUNIT_ASSERT(!memcmp(refBuffer, testBuffer, testStrLen));
+
+  float f;
+  char s[128];
+  double d;
+
+  Format::Read(refBuffer, f, s, d);
 
   CPPUNIT_ASSERT_EQUAL(1.0f, f);
   CPPUNIT_ASSERT(!std::memcmp(testStr, s, testStrLen));
