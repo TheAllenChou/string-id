@@ -78,18 +78,12 @@ namespace sidnet
 
     static size_t Read(const char *buffer, char *str)
     {
-      const size_t strLen = *reinterpret_cast<const size_t *>(buffer);
-      std::memcpy(str, buffer + sizeof(size_t), strLen);
-      str[strLen] = '\0';
-      return sizeof(size_t) + strLen;
+      return BufferFormat<char *>::Read(buffer, str);
     }
 
     static size_t Write(char *buffer, const char *str)
     {
-      const size_t strLen = std::strlen(str);
-      *reinterpret_cast<size_t *>(buffer) = strLen;
-      std::memcpy(buffer + sizeof(size_t), str, strLen);
-      return sizeof(size_t) + strLen;
+      return BufferFormat<char *>::Write(buffer, str);
     }
   };
   
