@@ -14,7 +14,7 @@
 #include <windows.h>
 #include <winsock2.h>
 #include <Ws2tcpip.h>
-#pragma comment(lib, "ws2_32.lib"
+#pragma comment(lib, "ws2_32.lib")
 
 namespace sidnet
 {
