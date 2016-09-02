@@ -14,9 +14,13 @@ class SidUnitTest : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE(SidUnitTest);
     CPPUNIT_TEST(TestHash);
     CPPUNIT_TEST(TestConcat);
+    CPPUNIT_TEST(TestNetBufferFormatFixedSize);
+    CPPUNIT_TEST(TestNetBufferFormatString);
     CPPUNIT_TEST_SUITE_END();
 
   public:
     void TestHash();
     void TestConcat();
+    void TestNetBufferFormatFixedSize();
+    void TestNetBufferFormatString();
 };

@@ -10,9 +10,11 @@
 
 // STL
 #include <algorithm>
+#include <cstddef>
 #include <cstdio>
 #include <cstring>
 #include <iostream>
+#include <type_traits>
 
 // Windows & Winsock
 #define WIN32_LEAN_AND_MEAN
