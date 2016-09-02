@@ -14,6 +14,14 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>
 #include <cppunit/extensions/HelperMacros.h>
+#if defined _DEBUG
+#pragma comment(lib, "cppunit_debug.lib")
+#elif defined _RELEASE
+#pragma comment(lib, "cppunit_release.lib")
+#else
+#pragma comment(lib, "cppunit.lib")
+#endif
+
 
 // STL
 #include <type_traits>

@@ -32,6 +32,7 @@ local staticLibs =
   "sid",     -- SID core library
   "siddb",   -- SID database
   "sidnet",  -- SID network library
+  "cppunit",
 }
 -- Table of static librari projects to create.  These names should have the
 --   same name as the folder the project's source code is located in.
