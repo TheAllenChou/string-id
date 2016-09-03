@@ -67,27 +67,6 @@ namespace sidnet
   };
 
 
-  // specialization: C-style string (const)
-  template <>
-  struct BufferFormat<const char *>
-  {
-    static constexpr size_t GetFixedSize()
-    {
-      return sizeof(size_t);
-    }
-
-    static size_t Read(const char *buffer, char *str)
-    {
-      return BufferFormat<char *>::Read(buffer, str);
-    }
-
-    static size_t Write(char *buffer, const char *str)
-    {
-      return BufferFormat<char *>::Write(buffer, str);
-    }
-  };
-  
-
   // general
   template<typename T, typename... Rest>
   struct BufferFormat<T, Rest...>
@@ -97,6 +76,9 @@ namespace sidnet
       return sizeof(T) + BufferFormat<Rest...>::GetFixedSize();
     }
 
+    // read
+    //-------------------------------------------------------------------------
+
     // default
     template <typename T, typename... Rest2>
     static size_t Read(const char *buffer, T &data, Rest2 &... rest)
@@ -105,14 +87,29 @@ namespace sidnet
       return BufferFormat<Rest2...>::Read(buffer + offset, rest...);
     }
 
+    // specialization: C-style string
+    template <typename... Rest2>
+    static size_t Read(const char *buffer, char *data, Rest2 &... rest)
+    {
+      const size_t offset = BufferFormat<char *>::Read(buffer, data);
+      return BufferFormat<Rest2...>::Read(buffer + offset, rest...);
+    }
+
     // specialization: raw buffer
     template <size_t N, typename... Rest2>
-    static size_t Read(const char *buffer, char (&data) [N], Rest2 &... rest)
+    static size_t Read(const char *buffer, char data[N], Rest2 &... rest)
     {
       char *pData = data;
       const size_t offset = BufferFormat<char *>::Read(buffer, pData);
       return BufferFormat<Rest2...>::Read(buffer + offset, rest...);
     }
+
+    //-------------------------------------------------------------------------
+    // end: read
+
+
+    // write
+    //-------------------------------------------------------------------------
     
     // default
     template <typename T, typename... Rest2>
@@ -126,9 +123,12 @@ namespace sidnet
     template <size_t N, typename... Rest2>
     static size_t Write(char *buffer, const char (&data) [N], const Rest2 &... rest)
     {
-      const size_t offset = BufferFormat<const char *>::Write(buffer, data);
+      const size_t offset = BufferFormat<char *>::Write(buffer, data);
       return BufferFormat<Rest2...>::Write(buffer + offset, rest...);
     }
+
+    //-------------------------------------------------------------------------
+    // end: write
   };
 
 }
