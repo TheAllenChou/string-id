@@ -21,84 +21,45 @@ namespace sidnet
 
   void SidClient::Find(StringId sid)
   {
-    const size_t commandSize = sizeof(StringIdQueryCommand);
-    const size_t sidValSize = sizeof(StringId::Storage);
+    char buffer[StringIdToStringQueryFormat::GetFixedSize()];
+    const size_t bufferSize = StringIdToStringQueryFormat::Write(buffer, Command::kStringIdToString, sid);
 
-    char buffer[commandSize + sidValSize];
-    *reinterpret_cast<StringIdQueryCommand *>(buffer) = StringIdQueryCommand::kStringIdToString;
-    *reinterpret_cast<StringId::Storage *>(buffer + commandSize) = sid.GetValue();
-
-    Send(buffer, commandSize + sidValSize);
+    Send(buffer, bufferSize);
   }
 
   void SidClient::Find(const char *str)
   {
-    const size_t commandSize = sizeof(StringIdQueryCommand);
-    const size_t strLenSize = sizeof(size_t);
-    const size_t maxStrSize = siddb::kMaxStrLen + 1;
-    const size_t strLen = std::strlen(str);
+    char buffer[StringToStringIdQueryFormat::GetFixedSize() + siddb::kMaxStrLen];
+    const size_t bufferSize = StringToStringIdQueryFormat::Write(buffer, Command::kStringToStringId, str);
 
-    size_t bufferPos = 0;
-    char buffer[commandSize + strLenSize + maxStrSize];
-
-    *reinterpret_cast<StringIdQueryCommand *>(buffer + bufferPos) = StringIdQueryCommand::kStringToStringId;
-    bufferPos += commandSize;
-
-    *reinterpret_cast<size_t *>(buffer + bufferPos) = strLen;
-    bufferPos += strLenSize;
-
-    std::memcpy(buffer + bufferPos, str, strLen);
-    bufferPos += strLen;
-
-    Send(buffer, bufferPos);
+    Send(buffer, bufferSize);
   }
   
   int SidClient::OnReceive(const char *buffer, size_t size)
   {
-    size_t bufferPos = 0;
-
-    const size_t commandSize = sizeof(StringIdQueryCommand);
-    const StringIdQueryCommand command = *reinterpret_cast<const StringIdQueryCommand *>(buffer + bufferPos);
-    bufferPos += commandSize;
+    Command command;
+    buffer += CommandFormat::Read(buffer, command);
 
     switch (command)
     {
-      case StringIdQueryCommand::kStringIdToString:
+      case Command::kStringIdToString:
       {
-        const size_t sidValSize = sizeof(StringId::Storage);
-        const StringId sid = StringId(*reinterpret_cast<const StringId::Storage *>(buffer + bufferPos));
-        bufferPos += sidValSize;
-
-        const size_t strLenSize = sizeof(size_t);
-        const size_t strLen = *reinterpret_cast<const size_t*>(buffer + bufferPos);
-        bufferPos += strLenSize;
-
-        const size_t maxStrSize = siddb::kMaxStrLen;
-        char str[maxStrSize + 1];
-        std::memcpy(str, buffer + bufferPos, strLen);
-        str[strLen] = '\0';
-        bufferPos += strLen;
+        StringId sid;
+        char str[siddb::kMaxStrLen + 1];
+        buffer += StringIdFormat::Read(buffer, sid);
+        buffer += StringFormat::Read(buffer, str);
 
         m_sidToStrCallback(sid, str);
 
         break;
       }
 
-      case StringIdQueryCommand::kStringToStringId:
+      case Command::kStringToStringId:
       {
-        const size_t strLenSize = sizeof(size_t);
-        const size_t strLen = *reinterpret_cast<const size_t*>(buffer + bufferPos);
-        bufferPos += strLenSize;
-
-        const size_t maxStrSize = siddb::kMaxStrLen;
-        char str[maxStrSize + 1];
-        std::memcpy(str, buffer + bufferPos, strLen);
-        str[strLen] = '\0';
-        bufferPos += strLen;
-
-        const size_t sidValSize = sizeof(StringId::Storage);
-        const StringId sid = StringId(*reinterpret_cast<const StringId::Storage *>(buffer + bufferPos));
-        bufferPos += sidValSize;
+        char str[siddb::kMaxStrLen + 1];
+        StringId sid;
+        buffer += StringFormat::Read(buffer, str);
+        buffer += StringIdFormat::Read(buffer, sid);
 
         m_strToSidCallback(str, sid);
 
