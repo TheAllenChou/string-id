@@ -21,10 +21,10 @@ This repository contains several projects:
   * sid: Core library (single header file).
   * siddb: SID database library example.
   * sidbot: Local SID database terminal example.
-  * sidnet: Networking library for SID server and client (WIP).
+  * sidnet: Networking library for SID server and client.
   * sidserver: Remote SID database server example (WIP).
   * sidclient: Remove SID database client example (WIP).
-  * sidvsdebug: Autoexp add-in for Visual Studio debugging (not implemented yet).
+  * sidvsdebug: Autoexp add-in for Visual Studio debugging (WIP).
   * unit-test: Library unit tests.
 
 The core library (sid), database library example (siddb), and database terminal example (sidbot) are platform-agnostic. The rest are targeted for Windows.
