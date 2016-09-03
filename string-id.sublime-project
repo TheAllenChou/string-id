@@ -8,6 +8,11 @@
     {
       "path": "src", 
       "name": "Source Files"
+    }, 
+    {
+      "path": ".", 
+      "name": "Project", 
+      "folder_exclude_patterns": [""]
     }
 	], 
   
