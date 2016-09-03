@@ -56,7 +56,7 @@ namespace siddb
     else
     {
       char msg[kMaxStrLen * 3];
-      std::sprintf(msg, "Hash collision (%016llx):\n%s\n%s\n\n");
+      std::sprintf(msg, "Hash collision (%016llx):\n%s\n%s\n\n", sidVal, str, iter->second.c_str());
       Log(msg);
     }
   }
@@ -126,6 +126,18 @@ namespace siddb
     }
 
     std::fclose(pFile);
+
+    return true;
+  }
+
+  bool Delete(const char *filePath)
+  {
+    FILE *pFile = std::fopen(filePath, "r");
+    if (!pFile)
+      return false;
+
+    std::fclose(pFile);
+    std::remove(filePath);
 
     return true;
   }

@@ -29,6 +29,7 @@ namespace siddb
 
   bool Load(const char *filePath);
   bool Save(const char *filePath);
+  bool Delete(const char *filePath);
 
   bool Find(StringId sid, char *pOut);
   bool Find(const char *str, StringId *pOut);
