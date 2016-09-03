@@ -16,12 +16,12 @@ namespace sidnet
   
   void SidServer::OnStart()
   {
-    siddb::Open("siddb.db");
+    siddb::Load(m_dbFilePath.c_str());
   }
 
   void SidServer::OnShutDown()
   {
-    siddb::Close();
+    Save();
   }
 
   int SidServer::OnReceive(sidnet::Socket *pSocket, const char *buffer, size_t size)
@@ -42,7 +42,7 @@ namespace sidnet
 
         size_t strLen = 0;
         char str[siddb::kMaxStrLen + 1];
-        if (siddb::Find(sid, str))
+        if (siddb::FindInFile(sid, str))
         {
           strLen = std::strlen(str);
         }
@@ -79,7 +79,7 @@ namespace sidnet
         str[strLen + 1] = '\0';
 
         StringId sid = kInvalidStringId;
-        siddb::Find(str, &sid);
+        siddb::FindInFile(str, &sid);
 
         const size_t sidValSize = sizeof(StringId::Storage);
 
@@ -105,6 +105,11 @@ namespace sidnet
     }
 
     return 0;
+  }
+
+  void SidServer::Save()
+  {
+    siddb::Save(m_dbFilePath.c_str());
   }
 
 }
