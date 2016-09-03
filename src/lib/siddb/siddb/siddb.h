@@ -33,21 +33,4 @@ namespace siddb
   bool Find(StringId sid, char *pOut);
   bool Find(const char *str, StringId *pOut);
 
-  //---------------------------------------------------------------------------
-
-  FILE *GetFile();
-  const char *GetPath();
-
-  bool OpenFile(const char *filePath);
-  bool CleanFile();
-  bool CloseFile();
-
-  bool GetSizeInFile(StringId::Storage *pOut);
-  bool ForEachInFile(ForEachCallback callback);
-
-  bool FindInFile(StringId sid, char *pOut);
-  bool FindInFile(const char *str, StringId *pOut);
-
-  bool AddToFile(const char *str);
-
 }

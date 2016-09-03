@@ -24,9 +24,13 @@ void PrintUsage()
                "    Looks up corresponding string ID of provided string (unquoted).\n\n";
 }
 
+static const char *s_databaseFilePath = "siddb.db";
+static const char *s_logFilePath = "siddb.log";
+
 int main(int argc, const char** argv)
 {
-  if (!siddb::OpenFile("siddb.db"))
+  siddb::Config(std::cout, s_logFilePath);
+  if (!siddb::Load(s_databaseFilePath))
     return -1;
 
   switch (argc)
@@ -38,13 +42,11 @@ int main(int argc, const char** argv)
         const char* pOption = argv[1] + 2;
         if (!std::strcmp(pOption, "list"))
         {
-          StringId::Storage numEntries = 0;
-          if (!siddb::GetSizeInFile(&numEntries))
-            return -1;
+          StringId::Storage numEntries = siddb::GetSize();
 
           std::printf("Number of entries: %lld\n", numEntries);
 
-          siddb::ForEachInFile
+          siddb::ForEach
           (
             [](StringId sid, const char* str) -> bool
             {
@@ -55,8 +57,7 @@ int main(int argc, const char** argv)
         }
         else if (!std::strcmp(pOption, "clean"))
         {
-          if (!siddb::CleanFile())
-            return -1;
+          siddb::Clean();
 
           std::printf("SID database cleaned.\n");
         }
@@ -73,7 +74,7 @@ int main(int argc, const char** argv)
 
         char str[siddb::kMaxStrLen];
 
-        if (siddb::FindInFile(StringId(sidVal), str))
+        if (siddb::Find(StringId(sidVal), str))
         {
           std::printf("0x%016llx -> %s\n", sidVal, str);
         }
@@ -89,7 +90,7 @@ int main(int argc, const char** argv)
         sscanf_s(argv[1], "%lld", &sidVal);
 
         char str[siddb::kMaxStrLen];
-        if (siddb::FindInFile(StringId(sidVal), str))
+        if (siddb::Find(StringId(sidVal), str))
         {
           std::printf("0x%016llx -> %s\n", sidVal, str);
         }
@@ -102,12 +103,13 @@ int main(int argc, const char** argv)
       else
       {
         StringId sid;
-        if (siddb::FindInFile(argv[1], &sid))
+        if (siddb::Find(argv[1], &sid))
         {
           std::printf("%s -> 0x%016llx\n", argv[1], sid.GetValue());
         }
-        else if (siddb::AddToFile(argv[1]))
+        else
         {
+          siddb::Add(argv[1]);
           std::printf("New entry saved:\n%s -> 0x%016llx\n", argv[1], SID_VAL(argv[1]));
         }
       }
@@ -118,7 +120,7 @@ int main(int argc, const char** argv)
       break;
   }
 
-  siddb::CloseFile();
+  siddb::Save(s_databaseFilePath);
 
   return 0;
 }
