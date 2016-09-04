@@ -39,7 +39,7 @@ int main(int argc, const char** argv)
   {
     char buffer[siddb::kMaxStrLen + 1];
     std::printf("sidbot>");
-    scanf_s("%s", buffer, sizeof(buffer));
+    scanf_s("%s", buffer, (int) sizeof(buffer));
 
     // option
     if (std::strlen(buffer) > 2 && buffer[0] == '-' && buffer[1] == '-')
@@ -70,7 +70,7 @@ int main(int argc, const char** argv)
       // save
       else if (!std::strcmp(pOption, "save"))
       {
-        scanf_s("%s", buffer, sizeof(buffer));
+        scanf_s("%s", buffer, (int) sizeof(buffer));
         if (siddb::Save(buffer))
         {
           std::printf("  SID database saved: %s\n", buffer);
@@ -83,7 +83,7 @@ int main(int argc, const char** argv)
       // load
       else if (!std::strcmp(pOption, "load"))
       {
-        scanf_s("%s", buffer, sizeof(buffer));
+        scanf_s("%s", buffer, (int) sizeof(buffer));
         if (siddb::Load(buffer))
         {
           std::printf("  SID database loaded: %s\n", buffer);
@@ -96,7 +96,7 @@ int main(int argc, const char** argv)
       // delete
       else if (!std::strcmp(pOption, "delete"))
       {
-        scanf_s("%s", buffer, sizeof(buffer));
+        scanf_s("%s", buffer, (int) sizeof(buffer));
         if (siddb::Delete(buffer))
         {
           std::printf("  SID database deleted: %s\n", buffer);
