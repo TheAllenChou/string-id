@@ -16,6 +16,8 @@
 
 #include <unordered_map>
 
+#include "siddb/lock.h"
+
 namespace siddb
 {
 
