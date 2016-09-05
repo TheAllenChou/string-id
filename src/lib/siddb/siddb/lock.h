@@ -26,8 +26,7 @@ namespace siddb
       void AcquireReadLock()
       {
         std::unique_lock<std::mutex> lock(m_counterMutex);
-        while (!ReadLockPredicate())
-          m_cv.wait(lock);
+        m_cv.wait(lock, [&]() { return !(m_counter & kWriterBit) && m_counter < kMaxReaders; });
         ++m_counter;
       }
 
@@ -41,33 +40,22 @@ namespace siddb
       void AcquireWriteLock()
       {
         std::unique_lock<std::mutex> lock(m_counterMutex);
-        while (!WriteLockPredicate())
-          m_cv.wait(lock);
-        m_counter |= kWriterFlag;
+        m_cv.wait(lock, [&]() { return m_counter == 0; });
+        m_counter |= kWriterBit;
       }
 
       void ReleaseWriteLock()
       {
         std::unique_lock<std::mutex> lock(m_counterMutex);
-        m_counter &= ~kWriterFlag;
+        m_counter &= ~kWriterBit;
         m_cv.notify_all();
       }
 
-      bool ReadLockPredicate()
-      {
-        return !(m_counter & kWriterFlag) && m_counter < kMaxReaders;
-      }
-
-      bool WriteLockPredicate()
-      {
-        return m_counter == 0;
-      }
-
-      static const size_t kWriterFlag = size_t(1) <<  (sizeof(size_t) * 8 - 1);
-      static const size_t kMaxReaders = kWriterFlag - 1;
+      static const size_t kWriterBit = size_t(1) <<  (sizeof(size_t) * 8 - 1);
+      static const size_t kMaxReaders = kWriterBit - 1;
       std::mutex m_counterMutex;
       std::condition_variable m_cv;
-      size_t m_counter;
+      size_t m_counter; // MSB, i.e. writer bit, acts as a "mutex"
   };
 
   class ReadAutoLock
