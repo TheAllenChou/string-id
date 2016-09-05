@@ -17,6 +17,7 @@ class SidUnitTest : public CppUnit::TestFixture
     CPPUNIT_TEST(TestNetBufferFormatFixedSize);
     CPPUNIT_TEST(TestNetBufferFormatCString);
     CPPUNIT_TEST(TestNetBufferFormatStringBuffer);
+    CPPUNIT_TEST(TestRwLock);
     CPPUNIT_TEST_SUITE_END();
 
   public:
@@ -25,4 +26,5 @@ class SidUnitTest : public CppUnit::TestFixture
     void TestNetBufferFormatFixedSize();
     void TestNetBufferFormatCString();
     void TestNetBufferFormatStringBuffer();
+    void TestRwLock();
 };

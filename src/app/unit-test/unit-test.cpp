@@ -8,7 +8,13 @@
 
 #include "unit-test.h"
 
+#include <cstdio>
+#include <cstring>
+#include <thread>
+#include <vector>
+
 #include "sid/sid.h"
+#include "siddb/lock.h"
 #include "sidnet/buffer-format.h"
 
 // Registers the fixture into the 'registry'
@@ -145,4 +151,83 @@ void SidUnitTest::TestNetBufferFormatStringBuffer()
   CPPUNIT_ASSERT_EQUAL(1.0f, f);
   CPPUNIT_ASSERT(!std::memcmp(testStr, s, testStrLen));
   CPPUNIT_ASSERT_EQUAL(2.0, d);
+}
+
+void SidUnitTest::TestRwLock()
+{
+  using namespace siddb;
+
+  const size_t numReaders = 10;
+  const size_t numWriters = 10;
+  const size_t iterations = 2000000;
+
+  bool readValid = true;
+  std::mutex readValidMutex;
+
+  RwLock lock;
+  size_t data = 0;
+
+  std::vector<std::thread> threads;
+
+  threads.clear();
+  for (size_t i = 0; i < numReaders; ++i)
+  {
+    threads.push_back(std::thread(
+      [&, i]()
+      {
+        ReadAutoLock autoLock(lock);
+        for (size_t j = 0; j < iterations; ++j)
+        {
+          if (data != 0)
+          {
+            std::unique_lock<std::mutex> readValidMutexLock(readValidMutex);
+            readValid = false;
+          }
+        }
+      }
+    ));
+  }
+  
+  for (auto &t : threads)
+    t.join();
+
+  CPPUNIT_ASSERT(readValid);
+
+  threads.clear();
+  for (size_t i = 0; i < numReaders; ++i)
+  {
+    threads.push_back(std::thread(
+      [&, i]()
+      {
+        ReadAutoLock autoLock(lock);
+        for (size_t j = 0; j < iterations; ++j)
+        {
+          if (data != data)
+          {
+            std::unique_lock<std::mutex> readValidMutexLock(readValidMutex);
+            readValid = false;
+          }
+        }
+      }
+    ));
+  }
+  for (size_t i = 0; i < numWriters; ++i)
+  {
+    threads.push_back(std::thread(
+      [&, i]()
+      {
+        WriteAutoLock autoLock(lock);
+        for (size_t j = 0; j < iterations; ++j)
+        {
+          data = data + 1;
+        }
+      }
+    ));
+  }
+
+  for (auto &t : threads)
+    t.join();
+
+  CPPUNIT_ASSERT(readValid);
+  CPPUNIT_ASSERT_EQUAL(iterations * numWriters, data);
 }
