@@ -192,7 +192,7 @@ namespace siddb
     const auto iter = s_table.find(sid.GetValue());
     if (iter == s_table.end() || std::strcmp(str, iter->second.c_str()))
     {
-      Add(str);
+      AddUnsafe(str);
     }
 
     *pOut = sid;
