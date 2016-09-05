@@ -67,6 +67,27 @@ namespace sidnet
   };
 
 
+  // specialization: const C-style string
+  template <>
+  struct BufferFormat<const char *>
+  {
+    static constexpr size_t GetFixedSize()
+    {
+      return sizeof(size_t);
+    }
+
+    static size_t Read(const char *buffer, char *str)
+    {
+      return BufferFormat<char *>::Read(buffer, str);
+    }
+
+    static size_t Write(char *buffer, const char *str)
+    {
+      return BufferFormat<char *>::Write(buffer, str);
+    }
+  };
+
+
   // specialization: buffer
   template <size_t N>
   struct BufferFormat<char [N]>
