@@ -122,14 +122,14 @@ namespace sidnet
     static size_t Read(const char *buffer, T &data, Rest2 &... rest)
     {
       const size_t offset = BufferFormat<T>::Read(buffer, data);
-      return BufferFormat<Rest2...>::Read(buffer + offset, rest...);
+      return offset + BufferFormat<Rest2...>::Read(buffer + offset, rest...);
     }
 
     template <typename T, typename... Rest2>
     static size_t Write(char *buffer, const T &data, const Rest2 &... rest)
     {
       const size_t offset = BufferFormat<T>::Write(buffer, data);
-      return BufferFormat<Rest2...>::Write(buffer + offset, rest...);
+      return offset + BufferFormat<Rest2...>::Write(buffer + offset, rest...);
     }
   };
 
