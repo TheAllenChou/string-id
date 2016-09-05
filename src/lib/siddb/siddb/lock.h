@@ -41,9 +41,9 @@ namespace siddb
       void AcquireWriteLock()
       {
         std::unique_lock<std::mutex> lock(m_counterMutex);
-        m_counter |= kWriterFlag;
         while (!WriteLockPredicate())
           m_cv.wait(lock);
+        m_counter |= kWriterFlag;
       }
 
       void ReleaseWriteLock()
@@ -60,7 +60,7 @@ namespace siddb
 
       bool WriteLockPredicate()
       {
-        return m_counter == kWriterFlag;
+        return m_counter == 0;
       }
 
       static const size_t kWriterFlag = size_t(1) <<  (sizeof(size_t) * 8 - 1);
