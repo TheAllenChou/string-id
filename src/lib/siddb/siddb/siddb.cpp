@@ -21,18 +21,25 @@
 namespace siddb
 {
 
+  static RwLock s_dataLock;
   static std::unordered_map<StringId::Storage, std::string> s_table;
+
+  static RwLock s_configLock;
   static std::ostream *s_pMsgOutput;
   static std::string s_logFilePath = "siddb.log";
 
   void Config(std::ostream &msgOutput, const char *logFilePath)
   {
+    WriteAutoLock lock(s_configLock);
+
     s_pMsgOutput = &msgOutput;
     s_logFilePath = logFilePath;
   }
 
   static void Log(const char *msg)
   {
+    WriteAutoLock lock(s_configLock);
+
     *s_pMsgOutput << msg;
 
     FILE *pFile = std::fopen(s_logFilePath.c_str(), "a+");
@@ -47,7 +54,7 @@ namespace siddb
     std::fclose(pFile);
   }
 
-  void Add(const char *str)
+  static void AddUnsafe(const char *str)
   {
     const StringId::Storage sidVal = SID_VAL(str);
     const auto iter = s_table.find(sidVal);
@@ -63,13 +70,24 @@ namespace siddb
     }
   }
 
+  void Add(const char *str)
+  {
+    WriteAutoLock lock(s_dataLock);
+
+    AddUnsafe(str);
+  }
+
   void Clean()
   {
+    WriteAutoLock lock(s_dataLock);
+
     s_table.clear();
   }
 
   void ForEach(ForEachCallback callback)
   {
+    ReadAutoLock lock(s_dataLock);
+
     for (const auto &pair : s_table)
     {
       StringId sid(pair.first);
@@ -80,16 +98,18 @@ namespace siddb
 
   size_t GetSize()
   {
+    ReadAutoLock lock(s_dataLock);
+
     return s_table.size();
   }
 
   bool Load(const char *filePath)
   {
+    WriteAutoLock lock(s_dataLock);
+
     FILE *pFile = std::fopen(filePath, "r");
     if (!pFile)
       return false;
-
-    Clean();
 
     size_t size = 0;
     std::fread(&size, sizeof(size_t), 1, pFile);
@@ -103,7 +123,7 @@ namespace siddb
       std::fread(str, 1, strLen, pFile);
       str[strLen] = '\0';
 
-      Add(str);
+      AddUnsafe(str);
     }
 
     std::fclose(pFile);
@@ -113,6 +133,8 @@ namespace siddb
 
   bool Save(const char *filePath)
   {
+    ReadAutoLock lock(s_dataLock);
+
     FILE *pFile = std::fopen(filePath, "w+");
     if (!pFile)
       return false;
@@ -134,6 +156,8 @@ namespace siddb
 
   bool Delete(const char *filePath)
   {
+    WriteAutoLock lock(s_dataLock);
+
     FILE *pFile = std::fopen(filePath, "r");
     if (!pFile)
       return false;
@@ -146,6 +170,8 @@ namespace siddb
 
   bool Find(StringId sid, char *pOut)
   {
+    ReadAutoLock lock(s_dataLock);
+
     const auto iter = s_table.find(sid.GetValue());
     if (iter != s_table.end())
     {
@@ -159,6 +185,8 @@ namespace siddb
 
   bool Find(const char *str, StringId *pOut)
   {
+    ReadAutoLock lock(s_dataLock);
+
     const StringId sid = SID(str);
 
     const auto iter = s_table.find(sid.GetValue());
