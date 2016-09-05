@@ -15,6 +15,7 @@
 
 #include "sid/sid.h"
 #include "siddb/lock.h"
+#include "siddb/siddb.h"
 #include "sidnet/buffer-format.h"
 
 // Registers the fixture into the 'registry'
@@ -43,6 +44,74 @@ void SidUnitTest::TestConcat()
 {
   CPPUNIT_ASSERT_EQUAL(SID("abcd"), SID("ab").Concat("cd"));
   CPPUNIT_ASSERT_EQUAL(SID("abcd"), SID("a").Concat("b").Concat("c").Concat("d"));
+}
+
+void SidUnitTest::TestDatabase()
+{
+  const char *testStr0 = "bunnies";
+  const char *testStr1 = "poop";
+  const char *testStr2 = "a-lot";
+  const char *testStr3 = "eh?";
+  const StringId testSid0 = SID("bunnies");
+  const StringId testSid1 = SID("poop");
+  const StringId testSid2 = SID("a-lot");
+  const StringId testSid3 = SID("eh?");
+
+  StringId sid;
+  char str[siddb::kMaxStrLen + 1];
+
+  siddb::Clean();
+  CPPUNIT_ASSERT_EQUAL(size_t(0), siddb::GetSize());
+
+  siddb::Add(testStr0);
+  siddb::Add(testStr1);
+  siddb::Add(testStr2);
+  CPPUNIT_ASSERT_EQUAL(size_t(3), siddb::GetSize());
+
+  CPPUNIT_ASSERT(siddb::Find(testStr0, &sid));
+  CPPUNIT_ASSERT_EQUAL(testSid0, sid);
+  CPPUNIT_ASSERT(siddb::Find(testStr1, &sid));
+  CPPUNIT_ASSERT_EQUAL(testSid1, sid);
+  CPPUNIT_ASSERT(siddb::Find(testStr2, &sid));
+  CPPUNIT_ASSERT_EQUAL(testSid2, sid);
+
+  siddb::Find(testSid0, str);
+  CPPUNIT_ASSERT(!std::strcmp(testStr0, str));
+  siddb::Find(testSid1, str);
+  CPPUNIT_ASSERT(!std::strcmp(testStr1, str));
+  siddb::Find(testSid2, str);
+  CPPUNIT_ASSERT(!std::strcmp(testStr2, str));
+
+  siddb::Save("unit-test.db");
+  siddb::Clean();
+  CPPUNIT_ASSERT_EQUAL(size_t(0), siddb::GetSize());
+
+  CPPUNIT_ASSERT(!siddb::Find(testSid0, str));
+  CPPUNIT_ASSERT(!siddb::Find(testSid1, str));
+  CPPUNIT_ASSERT(!siddb::Find(testSid2, str));
+
+  siddb::Add(testStr3);
+  siddb::Load("unit-test.db");
+  siddb::Delete("unit-test.db");
+  CPPUNIT_ASSERT_EQUAL(size_t(4), siddb::GetSize());
+
+  CPPUNIT_ASSERT(siddb::Find(testStr0, &sid));
+  CPPUNIT_ASSERT_EQUAL(testSid0, sid);
+  CPPUNIT_ASSERT(siddb::Find(testStr1, &sid));
+  CPPUNIT_ASSERT_EQUAL(testSid1, sid);
+  CPPUNIT_ASSERT(siddb::Find(testStr2, &sid));
+  CPPUNIT_ASSERT_EQUAL(testSid2, sid);
+  CPPUNIT_ASSERT(siddb::Find(testStr3, &sid));
+  CPPUNIT_ASSERT_EQUAL(testSid3, sid);
+
+  siddb::Find(testSid0, str);
+  CPPUNIT_ASSERT(!std::strcmp(testStr0, str));
+  siddb::Find(testSid1, str);
+  CPPUNIT_ASSERT(!std::strcmp(testStr1, str));
+  siddb::Find(testSid2, str);
+  CPPUNIT_ASSERT(!std::strcmp(testStr2, str));
+  siddb::Find(testSid3, str);
+  CPPUNIT_ASSERT(!std::strcmp(testStr3, str));
 }
 
 void SidUnitTest::TestNetBufferFormatFixedSize()
