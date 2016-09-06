@@ -79,11 +79,11 @@ namespace sidnet
       LeaveCriticalSection(&(pServer->m_activeCriticalSection));
       
       
-      int charsToReceive = 0;
-      int dataSize = 0;
+      size_t charsToReceive = 0;
+      size_t dataSize = 0;
       
-      // receive unsigned int portion (4 bytes)
-      dataSize = charsToReceive = 4;
+      // receive unsigned int portion
+      dataSize = charsToReceive = sizeof(size_t);
       while (charsToReceive)
       {
         int err = pClientSocket->Read(buffer + (dataSize - charsToReceive), charsToReceive);
@@ -121,12 +121,12 @@ namespace sidnet
       }
       
       
-      // deserialize unsigned int
-      unsigned int deserializedMessageSize = 0;
-      deserializedMessageSize |= static_cast<unsigned char>(buffer[0]) << 24;
-      deserializedMessageSize |= static_cast<unsigned char>(buffer[1]) << 16;
-      deserializedMessageSize |= static_cast<unsigned char>(buffer[2]) <<  8;
-      deserializedMessageSize |= static_cast<unsigned char>(buffer[3]) <<  0;
+      // deserialize size_t
+      size_t deserializedMessageSize = 0;
+      for (size_t i = 0; i < sizeof(size_t); ++i)
+      {
+        deserializedMessageSize |= static_cast<size_t>(buffer[i]) << (8 * (sizeof(size_t) - 1 - i));
+      }
 
       // buffer not large enough, double each iteration
       if (deserializedMessageSize > messageSize)
@@ -239,20 +239,21 @@ namespace sidnet
   
   int Server::Send(Socket *pSocket, const char *buffer, size_t size)
   {
-    // 4-byte unsigned int for string size
-    char sizeBuffer[4] = {0};
-    sizeBuffer[0] = char((size & 0xFF000000) >> 24);
-    sizeBuffer[1] = char((size & 0x00FF0000) >> 16);
-    sizeBuffer[2] = char((size & 0x0000FF00) >>  8);
-    sizeBuffer[3] = char((size & 0x000000FF) >>  0);
+    // serialize size_t
+    char sizeBuffer[sizeof(size_t)];
+    size_t deserializedMessageSize = 0;
+    for (size_t i = 0; i < sizeof(size_t); ++i)
+    {
+      sizeBuffer[i] = static_cast<char>((size >> (8 * (sizeof(size_t) - 1 - i))) & 0xFF);
+    }
 
     size_t charsToSend = 0;
 
-    // send string size (4 bytes)
-    charsToSend = 4;
+    // send string size
+    charsToSend = sizeof(size_t);
     while (charsToSend)
     {
-      int err = pSocket->Send(sizeBuffer + (4 - charsToSend), charsToSend);
+      int err = pSocket->Send(sizeBuffer + (sizeof(size_t) - charsToSend), charsToSend);
 
       if (err == SOCKET_ERROR)
       {

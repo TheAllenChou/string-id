@@ -27,8 +27,8 @@ namespace sidnet
       size_t charsToReceive = 0;
       size_t dataSize = 0;
       
-      // receive size_t portion (4 bytes)
-      dataSize = charsToReceive = 4;
+      // receive size_t portion
+      dataSize = charsToReceive = sizeof(size_t);
       while (charsToReceive)
       {
         int err = pClient->m_pSocket->Read(buffer + (dataSize - charsToReceive), charsToReceive);
@@ -63,11 +63,12 @@ namespace sidnet
       
       // deserialize size_t
       size_t deserializedMessageSize = 0;
-      deserializedMessageSize |= static_cast<unsigned char>(buffer[0]) << 24;
-      deserializedMessageSize |= static_cast<unsigned char>(buffer[1]) << 16;
-      deserializedMessageSize |= static_cast<unsigned char>(buffer[2]) <<  8;
-      deserializedMessageSize |= static_cast<unsigned char>(buffer[3]) <<  0;
+      for (size_t i = 0; i < sizeof(size_t); ++i)
+      {
+        deserializedMessageSize |= static_cast<size_t>(buffer[i]) << (8 * (sizeof(size_t) - 1 - i));
+      }
       
+
       // buffer not large enough, double each iteration
       if (deserializedMessageSize > messageSize)
       {
@@ -147,12 +148,14 @@ namespace sidnet
   {
     m_pSocket = new Socket();
     int err = m_pSocket->Connect(ipAddress, port);
-    
-    ClientReceiveMainData *data = new ClientReceiveMainData;
-    data->m_pClient = this;
-    
-    // create client receive main thread
-    CreateThread(0, 0, ClientReceiveMain, static_cast<void *>(data), 0, 0);
+    if (err == 0)
+    {
+      ClientReceiveMainData *data = new ClientReceiveMainData;
+      data->m_pClient = this;
+      
+      // create client receive main thread
+      CreateThread(0, 0, ClientReceiveMain, static_cast<void *>(data), 0, 0);
+    }
     
     return err;
   }
@@ -170,20 +173,21 @@ namespace sidnet
   
   int Client::Send(const char *buffer, size_t size)
   {
-    // 4-byte size_t for string size
-    char sizeBuffer[4] = {0};
-    sizeBuffer[0] = char((size & 0xFF000000) >> 24);
-    sizeBuffer[1] = char((size & 0x00FF0000) >> 16);
-    sizeBuffer[2] = char((size & 0x0000FF00) >>  8);
-    sizeBuffer[3] = char((size & 0x000000FF) >>  0);
+    // serialize size_t
+    char sizeBuffer[sizeof(size_t)];
+    size_t deserializedMessageSize = 0;
+    for (size_t i = 0; i < sizeof(size_t); ++i)
+    {
+      sizeBuffer[i] = static_cast<char>((size >> (8 * (sizeof(size_t) - 1 - i))) & 0xFF);
+    }
     
     size_t charsToSend = 0;
     
-    // send string size (4 bytes)
-    charsToSend = 4;
+    // send string size
+    charsToSend = sizeof(size_t);
     while (charsToSend)
     {
-      int err = m_pSocket->Send(sizeBuffer + (4 - charsToSend), charsToSend);
+      int err = m_pSocket->Send(sizeBuffer + (sizeof(size_t) - charsToSend), charsToSend);
         
       if (err == SOCKET_ERROR)
       {
