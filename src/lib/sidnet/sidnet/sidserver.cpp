@@ -44,7 +44,7 @@ namespace sidnet
         char responseBuffer[StringIdToStringResponseFormat::GetFixedSize() + siddb::kMaxStrLen];
         const size_t responseSize = StringIdToStringResponseFormat::Write(responseBuffer, Command::kStringIdToString, sid, str);
 
-        pSocket->Send(responseBuffer, responseSize);
+        Send(pSocket, responseBuffer, responseSize);
 
         break;
       }
@@ -63,7 +63,7 @@ namespace sidnet
         char responseBuffer[StringToStringIdResponseFormat::GetFixedSize() + siddb::kMaxStrLen];
         const size_t repsonseSize = StringToStringIdResponseFormat::Write(responseBuffer, Command::kStringToStringId, str, sid);
 
-        pSocket->Send(responseBuffer, repsonseSize);
+        Send(pSocket, responseBuffer, repsonseSize);
 
         break;
       }
