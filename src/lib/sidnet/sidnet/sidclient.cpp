@@ -19,7 +19,7 @@ namespace sidnet
     , m_strToSidCallback(strToSidCallback)
   { }
 
-  void SidClient::Find(StringId sid)
+  void SidClient::SendFindRequest(StringId sid)
   {
     char buffer[StringIdToStringQueryFormat::GetFixedSize()];
     const size_t bufferSize = StringIdToStringQueryFormat::Write(buffer, Command::kStringIdToString, sid);
@@ -27,7 +27,7 @@ namespace sidnet
     Send(buffer, bufferSize);
   }
 
-  void SidClient::Find(const char *str)
+  void SidClient::SendFindRequest(const char *str)
   {
     char buffer[StringToStringIdQueryFormat::GetFixedSize() + siddb::kMaxStrLen];
     const size_t bufferSize = StringToStringIdQueryFormat::Write(buffer, Command::kStringToStringId, str);

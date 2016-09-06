@@ -24,8 +24,8 @@ namespace sidnet
 
       SidClient(StringIdToStringCallback sidToStrCallback, StringToStringIdCallback strToSidCallback);
 
-      void Find(StringId sid);
-      void Find(const char *str);
+      void SendFindRequest(StringId sid);
+      void SendFindRequest(const char *str);
 
     protected:
       virtual int OnReceive(const char *buffer, size_t size);
