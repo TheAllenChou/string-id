@@ -6,24 +6,39 @@
  */
 /******************************************************************************/
 
+#include <condition_variable>
+#include <mutex>
+
 #include "sidnet/sidnet.h"
 #include "sidnet/sidclient.h"
+
+std::mutex s_ioMutex;
+std::condition_variable s_ioCv;
 
 void StringIdToStringHandler(StringId sid, const char *str)
 {
   if (std::strlen(str) > 0)
   {
+    std::unique_lock<std::mutex> lock(s_ioMutex);
     std::printf("  0x%016llx -> %s\n", sid.GetValue(), str);
   }
   else
   {
+    std::unique_lock<std::mutex> lock(s_ioMutex);
     std::printf("  0x%016llx -> ???\n", sid.GetValue());
   }
+
+  s_ioCv.notify_one();
 }
 
 void StringToStringIdHandler(const char *str, StringId sid)
 {
-  std::printf("  %s -> 0x%016llx\n", str, sid.GetValue());
+  {
+    std::unique_lock<std::mutex> lock(s_ioMutex);
+    std::printf("  %s -> 0x%016llx\n", str, sid.GetValue());
+  }
+
+  s_ioCv.notify_one();
 }
 
 int main(int argc, const char** argv)
@@ -63,6 +78,8 @@ int main(int argc, const char** argv)
   bool shouldExit = false;
   while (!shouldExit)
   {
+    std::unique_lock<std::mutex> lock(s_ioMutex);
+
     char buffer[256];
     std::printf("sidclient>");
     scanf_s("%s", buffer, (int) sizeof(buffer));
@@ -85,6 +102,8 @@ int main(int argc, const char** argv)
       sscanf_s(buffer, "%llx", &sidVal);
 
       client.SendFindRequest(StringId(sidVal));
+
+      s_ioCv.wait(lock);
     }
     // dec
     else if (buffer[0] >= '0' && buffer[0] <= '9')
@@ -93,11 +112,15 @@ int main(int argc, const char** argv)
       sscanf_s(buffer, "%lld", &sidVal);
 
       client.SendFindRequest(StringId(sidVal));
+
+      s_ioCv.wait(lock);
     }
     // string
     else
     {
       client.SendFindRequest(buffer);
+
+      s_ioCv.wait(lock);
     }
   }
 
