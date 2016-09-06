@@ -9,16 +9,21 @@
 #include "sidnet/sidnet.h"
 #include "sidnet/sidclient.h"
 
-static bool s_shouldExit = false;
-
 void StringIdToStringHandler(StringId sid, const char *str)
 {
-  // TODO
+  if (std::strlen(str) > 0)
+  {
+    std::printf("  0x%016llx -> %s\n", sid.GetValue(), str);
+  }
+  else
+  {
+    std::printf("  0x%016llx -> ???\n", sid.GetValue());
+  }
 }
 
 void StringToStringIdHandler(const char *str, StringId sid)
 {
-  // TODO
+  std::printf("  %s -> 0x%016llx\n", str, sid.GetValue());
 }
 
 int main(int argc, const char** argv)
@@ -52,15 +57,48 @@ int main(int argc, const char** argv)
 
   sidnet::SidClient client(StringIdToStringHandler, StringToStringIdHandler);
   err = client.Connect(ipStr, port);
-  if (!err)
+  if (err)
     return err;
 
-  while (!s_shouldExit)
+  bool shouldExit = false;
+  while (!shouldExit)
   {
-    char input[256];
-    scanf_s("%s", input, int(sizeof(input)));
-    if (!std::strcmp(input, "--exit"))
-      s_shouldExit = true;
+    char buffer[256];
+    std::printf("sidclient>");
+    scanf_s("%s", buffer, (int) sizeof(buffer));
+
+    // option
+    if (std::strlen(buffer) > 2 && buffer[0] == '-' && buffer[1] == '-')
+    {
+      const char* pOption = buffer + 2;
+
+      // exit
+      if (!std::strcmp(pOption, "exit"))
+      {
+        shouldExit = true;
+      }
+    }
+    // hex
+    else if (buffer[0] == '0' && (buffer[1] == 'x' || buffer[1] == 'X'))
+    {
+      StringId::Storage sidVal;
+      sscanf_s(buffer, "%llx", &sidVal);
+
+      client.SendFindRequest(StringId(sidVal));
+    }
+    // dec
+    else if (buffer[0] >= '0' && buffer[0] <= '9')
+    {
+      StringId::Storage sidVal;
+      sscanf_s(buffer, "%lld", &sidVal);
+
+      client.SendFindRequest(StringId(sidVal));
+    }
+    // string
+    else
+    {
+      client.SendFindRequest(buffer);
+    }
   }
 
   sidnet::ShutDown();
