@@ -10,10 +10,12 @@
 
 // STL
 #include <algorithm>
+#include <condition_variable>
 #include <cstdio>
 #include <cstring>
 #include <functional>
 #include <iostream>
+#include <thread>
 
 // Windows & Winsock
 #define WIN32_LEAN_AND_MEAN
