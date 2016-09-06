@@ -187,6 +187,8 @@ int main(int argc, const char** argv)
     }
   }
 
+  server.ShutDown();
+
   sidnet::ShutDown();
 
   return 0;
