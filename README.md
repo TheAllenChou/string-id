@@ -22,8 +22,8 @@ This repository contains several projects:
   * siddb: SID database library example.
   * sidbot: Local SID database terminal example.
   * sidnet: Networking library for SID server and client.
-  * sidserver: Remote SID database server example (WIP).
-  * sidclient: Remove SID database client example (WIP).
+  * sidserver: Remote SID database server example.
+  * sidclient: Remove SID database client example.
   * sidvsdebug: Autoexp add-in for Visual Studio debugging (WIP).
   * unit-test: Library unit tests.
 
