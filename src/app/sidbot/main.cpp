@@ -106,6 +106,11 @@ int main(int argc, const char** argv)
           std::printf("  Cannot delete SID database: %s\n", buffer);
         }
       }
+      // exit
+      else if (!std::strcmp(pOption, "exit"))
+      {
+        shouldExit = true;
+      }
       // help
       else /* if (!std::strcmp(pOption, "help")) */
       {
