@@ -62,7 +62,7 @@ namespace siddb
     {
       s_table.insert(std::make_pair(sidVal, str));
     }
-    else
+    else if (std::strcmp(str, iter->second.c_str()))
     {
       char msg[kMaxStrLen * 3];
       std::sprintf(msg, "Hash collision (%016llx):\n%s\n%s\n\n", sidVal, str, iter->second.c_str());
