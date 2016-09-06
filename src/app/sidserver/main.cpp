@@ -39,7 +39,7 @@ int main(int argc, const char** argv)
 
   sidnet::SidServer server;
   err = server.Start(port);
-  if (!err)
+  if (err)
     return err;
 
   while (!s_shouldExit)
