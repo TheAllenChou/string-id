@@ -38,8 +38,9 @@ To build the projects on Windows, you need:
 ## Code Examples
 ```C++
 /*
-  The SID macro evaluates to a StringId object at compile-time.
-  The SID_VAL macro evaluates to a StringId's underlying raw integer data at compile-time.
+  The SID macro evaluates to a StringId object.
+  The SID_VAL macro evaluates to a StringId's underlying raw integer data.
+  These macros evaluate to constants at compiled-time if given compile-time constant strings.
   StringId::GerValue() returns a StringId's underlying raw integer data.
   There is intentionally no implicit conversion between StringId and the underlying raw integer type.
 */
