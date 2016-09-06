@@ -22,13 +22,13 @@ namespace sidnet
     while (1)
     {
       // break when shut down
-      EnterCriticalSection(&(pServer->m_activeCriticalSection));
+      EnterCriticalSection(&pServer->m_activeCriticalSection);
         if (!(pServer->m_active))
         {
           LeaveCriticalSection(&pServer->m_activeCriticalSection);
           break;
         }
-      LeaveCriticalSection(&(pServer->m_activeCriticalSection));
+      LeaveCriticalSection(&pServer->m_activeCriticalSection);
       
       
       int err = 0;
@@ -306,6 +306,10 @@ namespace sidnet
 
   int Server::ShutDown()
   {
+    EnterCriticalSection(&m_activeCriticalSection);
+      m_active = false;
+    LeaveCriticalSection(&m_activeCriticalSection);
+
     return 0;
   }
 
