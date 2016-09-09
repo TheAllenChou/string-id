@@ -28,7 +28,7 @@ This repository contains several projects:
   * sidvsdebug: Autoexp add-in for Visual Studio debugging (WIP).
   * unit-test: Library unit tests.
 
-The core library (sid), database library example (siddb), and database terminal example (sidbot) are platform-agnostic. The rest are targeted for Windows.
+The core library (sid), database library example (siddb), and local database terminal example (sidbot) are platform-agnostic. The rest are targeted for Windows.
 
 To build the projects on Windows, you need:  
   * Sublime Text 3 (optional): for convenient premake & build command shortcuts without having to open VS2015
