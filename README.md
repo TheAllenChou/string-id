@@ -6,7 +6,7 @@ Notable advantages of SIDs over strings:
   * Each SID takes up small constant amount of memory (the underlying integer type).
   * SID comparison is constant-time and typically more efficient than string comparison.
   * Looking up hash tables using SID keys is typically more efficient than using strings.
-  * SIDs can be used in switch cases, which is not possible for strings (more efficient & prettier syntax).
+  * SIDs can be used in switch cases, which is not possible for strings (better efficiency & prettier syntax).
   * Concatenation of prefix SID and suffix string does not require original prefix string (saves memory).
 
 Main disadvantage and solutions:
