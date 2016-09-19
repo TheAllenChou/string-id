@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <cinttypes>
+
 
 // FNV-1a hash
 // https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
@@ -37,7 +39,7 @@ class StringId
 {
   public:
     
-    typedef unsigned long long Storage;
+    typedef std::uint64_t Storage;
     static_assert(sizeof(Storage) == 8, "StringId requires 64-bit storage");
 
     StringId() : StringId(static_cast<Storage>(0)) { }
