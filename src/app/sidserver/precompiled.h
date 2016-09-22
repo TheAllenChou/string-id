@@ -6,7 +6,9 @@
  */
 /******************************************************************************/
 
-#pragma once
+#ifndef SIDSERVER_PRECOMPILED_H
+#define SIDSERVER_PRECOMPILED_H
+
 
 // STL
 #include <algorithm>
@@ -22,3 +24,6 @@
 #include <winsock2.h>
 #include <Ws2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
+
+
+#endif

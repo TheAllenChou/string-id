@@ -6,7 +6,9 @@
  */
 /******************************************************************************/
 
-#pragma once
+#ifndef SIDNET_SID_CLIENT_H
+#define SIDNET_SID_CLIENT_H
+
 
 #include <functional>
 
@@ -36,3 +38,6 @@ namespace sidnet
   };
 
 }
+
+
+#endif

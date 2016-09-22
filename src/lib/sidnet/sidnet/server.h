@@ -6,7 +6,9 @@
  */
 /******************************************************************************/
 
-#pragma once
+#ifndef SIDNET_SERVER_H
+#define SIDNER_SERVER_H
+
 
 #include "sidnet/server-socket.h"
 
@@ -67,3 +69,6 @@ namespace sidnet
       ServerSocket *m_pServerSocket;
   };
 }
+
+
+#endif

@@ -6,7 +6,9 @@
  */
 /******************************************************************************/
 
-#pragma once
+#ifndef SIDDB_LOCK_H
+#define SIDDB_LOCK_H
+
 
 #include <condition_variable>
 #include <mutex>
@@ -77,3 +79,6 @@ namespace siddb
   };
 
 }
+
+
+#endif

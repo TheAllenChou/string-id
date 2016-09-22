@@ -6,7 +6,9 @@
  */
 /******************************************************************************/
 
-#pragma once
+#ifndef SIDNET_BUFFER_FORMAT_H
+#define SIDNET_BUFFER_FORMAT_H
+
 
 #include <cstddef>
 
@@ -135,3 +137,5 @@ namespace sidnet
 
 }
 
+
+#endif

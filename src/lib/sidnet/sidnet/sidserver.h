@@ -6,7 +6,9 @@
  */
 /******************************************************************************/
 
-#pragma once
+#ifndef SIDNET_SID_SERVER_H
+#define SIDNET_SID_SERVER_H
+
 
 #include "sidnet/server.h"
 
@@ -43,3 +45,6 @@ namespace sidnet
   };
 
 }
+
+
+#endif

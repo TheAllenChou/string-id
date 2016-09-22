@@ -6,7 +6,9 @@
  */
 /******************************************************************************/
 
-#pragma once
+#ifndef SIDDB_PRECOMPILED_H
+#define SIDDB_PRECOMPILED_H
+
 
 // STL
 #include <algorithm>
@@ -18,3 +20,5 @@
 #include <mutex>
 #include <string>
 #include <unordered_map>
+
+#endif

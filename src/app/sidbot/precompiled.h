@@ -6,7 +6,9 @@
  */
 /******************************************************************************/
 
-#pragma once
+#ifndef SIDBOT_PRECOMPILED_H
+#define SIDBOT_PRECOMPILED_H
+
 
 // STL
 #include <algorithm>
@@ -14,3 +16,6 @@
 #include <cstring>
 #include <functional>
 #include <iostream>
+
+
+#endif

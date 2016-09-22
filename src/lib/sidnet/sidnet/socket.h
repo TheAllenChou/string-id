@@ -6,7 +6,9 @@
  */
 /******************************************************************************/
 
-#pragma once
+#ifndef SIDNET_SOCKET_H
+#define SIDNET_SOCKET_H
+
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
@@ -47,3 +49,6 @@ namespace sidnet
   };
 
 }
+
+
+#endif

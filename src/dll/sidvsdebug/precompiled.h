@@ -6,4 +6,7 @@
  */
 /******************************************************************************/
 
-#pragma once
+#ifndef SIDVSDEBUG_PRECOMPILED_H
+#define SIDVSDEBUG_PRECOMPILED_H
+
+#endif

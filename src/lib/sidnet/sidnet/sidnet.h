@@ -6,7 +6,9 @@
  */
 /******************************************************************************/
 
-#pragma once
+#ifndef SIDNET_H
+#define SIDNET_H
+
 
 #include "sid/sid.h"
 #include "sidnet/buffer-format.h"
@@ -32,3 +34,6 @@ namespace sidnet
   typedef BufferFormat<Command, char *, StringId> StringToStringIdResponseFormat;
 
 }
+
+
+#endif

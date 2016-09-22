@@ -6,7 +6,9 @@
  */
 /******************************************************************************/
 
-#pragma once
+#ifndef UNIT_TEST_PRECOMPILED_H
+#define UNIT_TEST_PRECOMPILED_H
+
 
 // CppUnit
 #pragma warning (disable: 4267)
@@ -22,10 +24,12 @@
 #pragma comment(lib, "cppunit.lib")
 #endif
 
-
 // STL
 #include <cstdio>
 #include <cstring>
 #include <mutex>
 #include <thread>
 #include <vector>
+
+
+#endif

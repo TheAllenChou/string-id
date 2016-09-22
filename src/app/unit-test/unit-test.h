@@ -6,7 +6,9 @@
  */
 /******************************************************************************/
 
-#pragma once
+#ifndef UNIT_TEST_H
+#define UNIT_TEST_H
+
 
 class SidUnitTest : public CppUnit::TestFixture
 {
@@ -30,3 +32,6 @@ class SidUnitTest : public CppUnit::TestFixture
     void TestNetBufferFormatStringBuffer();
     void TestRwLock();
 };
+
+
+#endif

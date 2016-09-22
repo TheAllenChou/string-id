@@ -6,7 +6,9 @@
  */
 /******************************************************************************/
 
-#pragma once
+#ifndef SIDNET_SERVER_SOCKET_H
+#define SIDNET_SERVER_SOCKET_H
+
 
 #include "sidnet/socket.h"
 
@@ -31,3 +33,6 @@ namespace sidnet
       SOCKET m_wsSocket;
   };
 }
+
+
+#endif

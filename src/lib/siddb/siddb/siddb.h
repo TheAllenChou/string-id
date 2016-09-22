@@ -6,7 +6,9 @@
 */
 /******************************************************************************/
 
-#pragma once
+#ifndef SIDDB_H
+#define SIDDB_H
+
 
 #include <cstdio>
 #include <functional>
@@ -35,3 +37,6 @@ namespace siddb
   bool Find(const char *str, StringId *pOut);
 
 }
+
+
+#endif

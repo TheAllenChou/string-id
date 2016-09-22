@@ -6,7 +6,8 @@
 */
 /******************************************************************************/
 
-#pragma once
+#ifndef STRING_ID_H
+#define STRING_ID_H
 
 #include <cinttypes>
 
@@ -91,3 +92,6 @@ static const StringId kInvalidStringId;
 
 //-----------------------------------------------------------------------------
 // end: StringId macros & constant
+
+
+#endif

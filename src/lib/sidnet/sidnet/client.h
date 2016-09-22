@@ -6,7 +6,9 @@
  */
 /******************************************************************************/
 
-#pragma once
+#ifndef SIDNET_CLIENT_H
+#define SIDNET_CLIENT_H
+
 
 #include "sidnet/socket.h"
 
@@ -46,3 +48,6 @@ namespace sidnet
       int Send(const char *buffer, size_t size);
   };
 }
+
+
+#endif
