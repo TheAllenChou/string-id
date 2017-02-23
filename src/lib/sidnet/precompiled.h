@@ -18,6 +18,7 @@
 #include <iostream>
 #include <string>
 #include <type_traits>
+#include <vector>
 
 // Windows & Winsock
 #define WIN32_LEAN_AND_MEAN

@@ -64,7 +64,8 @@ namespace sidnet
     
     
     unsigned int messageSize = 256;
-    char *buffer = new char[messageSize];
+    std::vector<char> buffer;
+    buffer.resize(messageSize);
     
     // start handling receive
     while (1)
@@ -86,7 +87,7 @@ namespace sidnet
       dataSize = charsToReceive = sizeof(size_t);
       while (charsToReceive)
       {
-        int err = pClientSocket->Read(buffer + (dataSize - charsToReceive), charsToReceive);
+        int err = pClientSocket->Read(&buffer[0] + (dataSize - charsToReceive), charsToReceive);
 
         if (err == SOCKET_ERROR)
         {
@@ -131,14 +132,12 @@ namespace sidnet
       // buffer not large enough, double each iteration
       if (deserializedMessageSize > messageSize)
       {
-        delete buffer;
-
         do 
         {
           messageSize <<= 1;
         } while (deserializedMessageSize > messageSize);
 
-        buffer = new char[messageSize];
+        buffer.resize(messageSize);
       }
 
 
@@ -146,7 +145,7 @@ namespace sidnet
       dataSize = charsToReceive = deserializedMessageSize;
       while (charsToReceive)
       {
-        int err = pClientSocket->Read(buffer + (dataSize - charsToReceive), charsToReceive);
+        int err = pClientSocket->Read(&buffer[0] + (dataSize - charsToReceive), charsToReceive);
 
         if (err == SOCKET_ERROR)
         {
@@ -181,7 +180,7 @@ namespace sidnet
 
 
       // sufficient string information, call Server::OnReceive
-      int err = pServer->OnReceive(pClientSocket, buffer, dataSize);
+      int err = pServer->OnReceive(pClientSocket, &buffer[0], dataSize);
       if (err)
       {
         // shut down
