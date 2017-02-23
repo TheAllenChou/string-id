@@ -17,21 +17,24 @@
 void PrintUsage()
 {
   std::cout << "USAGE:\n"
-    "  --list\n"
-    "    Lists all SID-string pairs in the database.\n"
-    "  --help\n"
-    "    Prints help.\n"
-    "  --clean\n"
-    "    Cleans the database.\n"
-    "  --save <file name>\n"
-    "    Save SID database to specified file name.\n"
-    "  --load <file name>\n"
-    "    Load SID database from specified file name.\n"
-    "  <string ID>\n"
-    "    Looks up corresponding string of specified string ID, \n"
-    "    hex (e.g. 0xDEADBEEF) or decimal (e.g. 1048576).\n"
     "  <string>\n"
-    "    Looks up corresponding string ID of specified string (unquoted).\n";
+    "      Look up corresponding string ID of specified string (unquoted).\n"
+    "  <string ID>\n"
+    "      Look up corresponding string of specified string ID, \n"
+    "      hex (e.g. 0xDEADBEEF) or decimal (e.g. 1048576).\n"
+    "  --list\n"
+    "      Lists all SID-string pairs in the database.\n"
+    "  --clean\n"
+    "      Clean the database.\n"
+    "  --save <file name>\n"
+    "      Save SID database to specified file name.\n"
+    "  --load <file name>\n"
+    "      Load SID database from specified file name.\n"
+    "  --exit\n"
+    "      Quit program.\n"
+    "  --help\n"
+    "      Print help.\n"
+    ;
 }
 
 int main(int argc, const char** argv)
