@@ -65,21 +65,18 @@ local debugFlags =
   "Symbols",
   "NoMinimalRebuild",
   "NoEditAndContinue",
-  "WinMain"
 }
 local releaseFlags =
 {
   "Symbols",
   "NoMinimalRebuild",
   "NoEditAndContinue",
-  "WinMain"
 }
 local shipFlags =
 {
   "Symbols", 
   "NoMinimalRebuild",
   "NoEditAndContinue",
-  "WinMain"
 }
 
 -- Table of linker options
@@ -118,6 +115,12 @@ local sourceDir   = "./src"
 local outDir      = "./bin"
 local debugDir    = "./working"
 
+-- Windows SDK
+function os.winSdkVersion()
+  local reg_arch = iif( os.is64bit(), "\\Wow6432Node\\", "\\" )
+  local sdk_version = os.getWindowsRegistry( "HKLM:SOFTWARE" .. reg_arch .."Microsoft\\Microsoft SDKs\\Windows\\v10.0\\ProductVersion" )
+  if sdk_version ~= nil then return sdk_version end
+end
 
 -- Search through all directories and subdirectories of path and return all of them
 -- t - file directory table (to be filled)
@@ -164,6 +167,14 @@ function SetUpProj(projName, projType, locPath, pchFile, fileDir, outDir)
   architecture("x64")
   includedirs(fileDir)
   links(ReadDependencies(fileDir .. "/dependencies.txt"))
+
+  -- Windows SDK
+  filter({"system:windows", "action:vs*"})
+  systemversion(os.winSdkVersion() .. ".0")
+  includedirs("$(VC_IncludePath)")
+  includedirs("$(WindowsSDK_IncludePath)")
+  libdirs("$(WindowsSDK_LibraryPath_x64")
+  filter({})
   
   -- recursively scan project directory
   directories = {fileDir}
