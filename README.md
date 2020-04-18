@@ -1,4 +1,5 @@
 ## String ID
+by **Ming-Lun "Allen" Chou** / [AllenChou.net](http://AllenChou.net) / [@TheAllenChou](http://twitter.com/TheAllenChou) / [Patreon](https://www.patreon.com/TheAllenChou)
 
 String ID (SID) is a tool that converts strings into fix-sized hashed values, commonly used in games for looking up resources. The hash function is chosen to support string concatenation. This project uses FNV-1a hash.
 
@@ -72,8 +73,3 @@ switch (sid4.GetValue())
 // asset look-up
 Texture* pTexture = g_textureMgr.FindTexture(SID("cloud"));
 ```
-
-----
-**Ming-Lun "Allen" Chou**  
-[AllenChou.net](http://AllenChou.net)  
-[@TheAllenChou](http://twitter.com/TheAllenChou)  
