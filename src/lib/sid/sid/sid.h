@@ -45,14 +45,14 @@ class StringId
 
     StringId() : StringId(static_cast<Storage>(0)) { }
     explicit StringId(Storage data) : m_data(data) { }
-    explicit StringId::StringId(const char *str) : m_data(StringIdHash(str)) { }
+    explicit StringId(const char *str) : m_data(StringIdHash(str)) { }
 
-    static const StringId StringId::Concat(const StringId &sid, const char *str)
+    static const StringId Concat(const StringId &sid, const char *str)
     {
       return sid.Concat(str);
     }
 
-    const StringId StringId::Concat(const char *str) const
+    const StringId Concat(const char *str) const
     {
       return StringId(StringIdHashConcat(m_data, str));
     }
